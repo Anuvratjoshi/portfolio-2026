@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.env.local
+
+# AI agent / editor instruction files (local dev tooling only)
+copilot.instruction.md
+AGENTS.md
+CLAUDE.md
