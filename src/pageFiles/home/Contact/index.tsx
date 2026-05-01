@@ -38,9 +38,13 @@ export function Contact() {
       });
       if (!res.ok) {
         const json = await res.json().catch(() => ({}));
-        throw new Error(
-          json?.error ?? "Something went wrong. Please try again.",
-        );
+        const msg =
+          json?.error === "invalid_email_domain"
+            ? "That email address doesn't look real — the domain has no mail server. Please use a valid email."
+            : (json?.message ??
+              json?.error ??
+              "Something went wrong. Please try again.");
+        throw new Error(msg);
       }
       setStatus("success");
       reset();

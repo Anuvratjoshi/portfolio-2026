@@ -28,7 +28,7 @@ export function Skills() {
   return (
     <section
       id="skills"
-      className="py-24 lg:py-32 bg-white dark:bg-gradient-to-b dark:from-slate-950 dark:to-slate-900"
+      className="py-24 lg:py-32 bg-white dark:bg-linear-to-b dark:from-slate-950 dark:to-slate-900"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <SectionHeading

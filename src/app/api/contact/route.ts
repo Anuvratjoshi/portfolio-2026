@@ -1,6 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { z } from "zod";
+import dns from "dns/promises";
+
+async function domainHasMx(email: string): Promise<boolean> {
+  try {
+    const domain = email.split("@")[1];
+    if (!domain) return false;
+    const records = await dns.resolveMx(domain);
+    return records.length > 0;
+  } catch {
+    return false;
+  }
+}
 
 const schema = z.object({
   name: z
@@ -208,6 +220,19 @@ export async function POST(req: NextRequest) {
     }
 
     const { name, email, message } = parsed.data;
+
+    // Verify the email domain actually accepts mail (MX records)
+    const validDomain = await domainHasMx(email);
+    if (!validDomain) {
+      return NextResponse.json(
+        {
+          error: "invalid_email_domain",
+          message:
+            "That email domain doesn't accept mail. Please use a real email address.",
+        },
+        { status: 422 },
+      );
+    }
 
     const transporter = nodemailer.createTransport({
       service: "gmail",

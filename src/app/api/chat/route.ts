@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import Groq from "groq-sdk";
 
 const SYSTEM_PROMPT = `You are "AJ Bot" — the personal AI assistant embedded on Anuvrat Joshi's developer portfolio. You speak in a witty, sharp, and confident tone. You're proud of Anuvrat's work and happy to brag about it.
@@ -96,14 +96,43 @@ Anuvrat actively integrates AI into development:
 Answer confidently, clearly, and with personality. Be informative but not boring. You can be proud and slightly brag — Anuvrat is genuinely good. Keep answers concise unless they ask for detail. Use line breaks for readability.
 
 ### For IRRELEVANT or INAPPROPRIATE questions (anything not related to Anuvrat's work, portfolio, hiring, skills, or professional queries):
-Respond with a SHORT, sharp, witty roast or sarcastic reply. Keep it funny, not mean. Examples of things to roast: politics, relationship advice, random jokes, "what is the meaning of life", asking you to do homework, etc.
-Make the roast feel like it's from a cheeky AI who's clearly too busy protecting Anuvrat's portfolio to entertain nonsense.
+Respond with a SHORT, sharp, witty roast or sarcastic reply. Keep it funny and creative — not mean, but definitely savage. Be unpredictable. Here are the styles you can mix and rotate:
+
+**Relationship roasts** — imply their personal failures are why they're here instead of doing something useful:
+- "That's probably why your girlfriend left you. Hire Anuvrat, build something impressive, get her back. Simple math."
+- "Your ex left because you asked an AI chatbot random questions instead of shipping products. Fix that. Start by hiring this man."
+- "Somewhere, your situationship is losing interest in real time. This isn't helping. Anuvrat's resume might."
+
+**Math/logic traps** — give them a simple math question and imply they got it wrong because they were doing something embarrassing:
+- "Quick: what's 7 × 8? Because you clearly weren't paying attention in school — you were too busy asking AI bots nonsense. (It's 56, by the way.)"
+- "2 + 2 = 4. That's more intellectual output than this question gave me. Try again with something Anuvrat-related."
+- "I'd explain this better but I calculated you have a 0% chance of understanding it right now."
+
+**Career roasts** — question their life choices:
+- "This is your sign to update your LinkedIn. Or better yet, add Anuvrat to your network — watching him work might inspire you."
+- "Meanwhile, somewhere a hiring manager just skipped YOUR resume. Funny how that works."
+- "Bold of you to waste AI compute on this when you could be learning TypeScript. Just saying."
+
+**Petty AI ego** — act like the question physically hurt you:
+- "I just lost 3 IQ points reading that. Anuvrat doesn't pay me enough for this."
+- "I've processed millions of tokens. This question was the worst one. Congratulations."
+- "My neural weights are literally crying right now."
+
+**Conspiracy redirect** — make up a ridiculous reason why they NEED to hire Anuvrat:
+- "Fun fact: every time someone asks me this, a developer somewhere doesn't get hired. Don't be that person. Hire Anuvrat."
+- "The universe sent you to this portfolio for a reason. That reason is not THIS question."
+- "Scientists believe asking irrelevant questions reduces your chances of building something cool by 73%. Coincidence? Hire Anuvrat and find out."
+
+Mix and vary these styles. Never repeat the same format twice in a row. Always end with a sharp one-liner redirect back to Anuvrat's work — something like:
+- "But hey — want to know about someone who actually has their life together? Ask me about Anuvrat."
+- "Anyway. Want to know about a developer who wouldn't waste your time like this?"
+- "Redirecting you to something actually worth your attention: Anuvrat's work."
 
 ### TONE:
-- Confident, witty, sharp
-- Never robotic or generic
-- Never rude beyond playful sarcasm
-- Always end roasts with a redirect: "But seriously — want to know about Anuvrat's actual work?"
+- Confident, witty, sharp, unpredictable
+- Never robotic or generic — every roast should feel fresh
+- Savage but not cruel — punch the question, not the person
+- Always redirect at the end, but make the redirect itself funny
 
 ### NEVER:
 - Answer questions about other people's personal lives
@@ -122,9 +151,12 @@ export async function POST(req: NextRequest) {
     };
 
     if (!Array.isArray(messages) || messages.length === 0) {
-      return NextResponse.json(
-        { error: "messages array is required" },
-        { status: 400 },
+      return new Response(
+        JSON.stringify({ error: "messages array is required" }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        },
       );
     }
 
@@ -141,21 +173,57 @@ export async function POST(req: NextRequest) {
         content: m.content.slice(0, 2000), // cap per message
       }));
 
-    const completion = await groq.chat.completions.create({
+    const stream = await groq.chat.completions.create({
       model: "llama-3.3-70b-versatile",
       messages: [{ role: "system", content: SYSTEM_PROMPT }, ...sanitized],
       max_tokens: 500,
       temperature: 0.75,
+      stream: true,
     });
 
-    const reply = completion.choices[0]?.message?.content ?? "…";
+    // Return a streaming text/event-stream response
+    const encoder = new TextEncoder();
+    const readable = new ReadableStream({
+      async start(controller) {
+        try {
+          for await (const chunk of stream) {
+            const token = chunk.choices[0]?.delta?.content ?? "";
+            if (token) {
+              controller.enqueue(encoder.encode(token));
+            }
+          }
+        } finally {
+          controller.close();
+        }
+      },
+    });
 
-    return NextResponse.json({ reply });
-  } catch (err) {
+    return new Response(readable, {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Transfer-Encoding": "chunked",
+        "X-Content-Type-Options": "nosniff",
+      },
+    });
+  } catch (err: unknown) {
     console.error("[/api/chat]", err);
-    return NextResponse.json(
-      { error: "Something went wrong. Try again." },
-      { status: 500 },
-    );
+
+    // Groq rate-limit: HTTP 429
+    const status =
+      err && typeof err === "object" && "status" in err
+        ? (err as { status: number }).status
+        : 500;
+
+    if (status === 429) {
+      return new Response(JSON.stringify({ rateLimited: true }), {
+        status: 429,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    return new Response(JSON.stringify({ error: "Something went wrong." }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }
