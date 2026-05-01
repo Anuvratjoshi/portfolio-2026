@@ -14,6 +14,7 @@ const NAV_LINKS = [
   { label: "Projects", href: "#projects" },
   { label: "Open Source", href: "#open-source" },
   { label: "AI Workflow", href: "#ai-workflow" },
+  { label: "Guestbook", href: "#guestbook" },
   { label: "Contact", href: "#contact" },
 ];
 

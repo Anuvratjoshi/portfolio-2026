@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/common/components/layout/Navbar";
-import { Footer } from "@/common/components/layout/Footer";
 import { ThemeProvider } from "@/common/components/providers/ThemeProvider";
-import { ChatBot } from "@/common/components/ui/ChatBot";
+import { SiteShell } from "@/common/components/layout/SiteShell";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -60,10 +58,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
         <ThemeProvider>
-          <Navbar />
-          <div className="flex-1">{children}</div>
-          <Footer />
-          <ChatBot />
+          <SiteShell>{children}</SiteShell>
         </ThemeProvider>
       </body>
     </html>

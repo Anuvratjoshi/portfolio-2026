@@ -138,6 +138,24 @@ async function ensureCollections(db: Db): Promise<void> {
       { name: "visitorId_unique", unique: true, background: true },
     );
     console.log(`${tag2} ✓ Collection 'visitor_ids' ready.`);
+
+    // ── cta_clicks collection (CTA heatmap analytics) ────────────────────
+    const ctaClicks = db.collection("cta_clicks");
+    await ctaClicks.createIndex({ action: 1 }, { background: true });
+    await ctaClicks.createIndex({ timestamp: -1 }, { background: true });
+    await ctaClicks.createIndex({ visitorId: 1 }, { background: true });
+    console.log(`${tag2} ✓ Collection 'cta_clicks' ready.`);
+
+    // ── bot_questions collection (AJ Bot analytics) ───────────────────────
+    const botQ = db.collection("bot_questions");
+    await botQ.createIndex({ timestamp: -1 }, { background: true });
+    console.log(`${tag2} ✓ Collection 'bot_questions' ready.`);
+
+    // ── guestbook collection ──────────────────────────────────────────────
+    const gb = db.collection("guestbook");
+    await gb.createIndex({ timestamp: -1 }, { background: true });
+    await gb.createIndex({ approved: 1 }, { background: true });
+    console.log(`${tag2} ✓ Collection 'guestbook' ready.`);
   } catch (err) {
     // Non-fatal — app still works, just log it
     console.warn(

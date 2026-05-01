@@ -6,6 +6,7 @@ import { Projects } from "./Projects";
 import { OpenSource } from "./OpenSource";
 import { AIWorkflow } from "./AIWorkflow";
 import { Contact } from "./Contact";
+import { Guestbook } from "./Guestbook";
 
 export default function HomePage() {
   return (
@@ -17,6 +18,7 @@ export default function HomePage() {
       <Projects />
       <OpenSource />
       <AIWorkflow />
+      <Guestbook />
       <Contact />
     </main>
   );

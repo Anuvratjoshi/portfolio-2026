@@ -698,6 +698,13 @@ export function ChatBot() {
               role,
               content,
             })),
+            visitorId: (() => {
+              try {
+                return localStorage.getItem("aj_visitor_id") ?? "anonymous";
+              } catch {
+                return "anonymous";
+              }
+            })(),
           }),
         });
 

@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import Groq from "groq-sdk";
+import { getDb } from "@/lib/mongodb";
 
 const SYSTEM_PROMPT = `You are "AJ Bot" — the personal AI assistant embedded on Anuvrat Joshi's developer portfolio. You speak in a witty, sharp, and confident tone. You're proud of Anuvrat's work and happy to brag about it.
 
@@ -146,32 +147,46 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { messages } = body as {
+    const { messages, visitorId } = body as {
       messages: Array<{ role: "user" | "assistant"; content: string }>;
+      visitorId?: string;
     };
 
     if (!Array.isArray(messages) || messages.length === 0) {
       return new Response(
         JSON.stringify({ error: "messages array is required" }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json" },
-        },
+        { status: 400, headers: { "Content-Type": "application/json" } },
       );
     }
 
-    // Sanitize: only allow role user/assistant, trim content
+    // Sanitize messages
     const sanitized = messages
       .filter(
         (m) =>
           (m.role === "user" || m.role === "assistant") &&
           typeof m.content === "string",
       )
-      .slice(-20) // keep last 20 messages for context window safety
-      .map((m) => ({
-        role: m.role,
-        content: m.content.slice(0, 2000), // cap per message
-      }));
+      .slice(-20)
+      .map((m) => ({ role: m.role, content: m.content.slice(0, 2000) }));
+
+    // Save the latest user question asynchronously (fire-and-forget)
+    const lastUserMsg = [...sanitized].reverse().find((m) => m.role === "user");
+    if (lastUserMsg?.content) {
+      getDb()
+        .then((db) =>
+          db.collection("bot_questions").insertOne({
+            question: lastUserMsg.content.slice(0, 500),
+            visitorId:
+              typeof visitorId === "string"
+                ? visitorId.slice(0, 64)
+                : "anonymous",
+            timestamp: new Date(),
+          }),
+        )
+        .catch(() => {
+          /* non-critical */
+        });
+    }
 
     const stream = await groq.chat.completions.create({
       model: "llama-3.3-70b-versatile",

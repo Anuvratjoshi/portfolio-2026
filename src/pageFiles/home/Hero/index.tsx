@@ -7,6 +7,7 @@ import { LinkedinIcon } from "@/common/components/ui/LinkedinIcon";
 import { GithubIcon } from "@/common/components/ui/GithubIcon";
 import { PERSONAL, STATS } from "@/common/constants/data";
 import { VisitorCounter } from "@/common/components/ui/VisitorCounter";
+import { useAnalytics } from "@/common/hooks/useAnalytics";
 
 const ROLES = [
   "Senior Full Stack Developer",
@@ -55,6 +56,7 @@ function AnimatedCounter({ value }: { value: string }) {
 export function Hero() {
   const [roleIndex, setRoleIndex] = useState(0);
   const [roleVisible, setRoleVisible] = useState(true);
+  const track = useAnalytics();
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -182,6 +184,7 @@ export function Hero() {
             href={`mailto:${PERSONAL.email}`}
             whileHover={{ scale: 1.03, y: -1 }}
             whileTap={{ scale: 0.97 }}
+            onClick={() => track("hire_me")}
             className="px-7 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl transition-colors duration-200 shadow-lg shadow-indigo-900/40"
           >
             Hire Me
@@ -191,6 +194,7 @@ export function Hero() {
             download
             whileHover={{ scale: 1.03, y: -1 }}
             whileTap={{ scale: 0.97 }}
+            onClick={() => track("resume_download")}
             className="inline-flex items-center gap-2 px-7 py-3.5 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-800 dark:text-white font-semibold rounded-xl border border-slate-200 dark:border-white/10 transition-colors duration-200"
           >
             <Download size={16} />
@@ -205,10 +209,25 @@ export function Hero() {
           className="flex items-center justify-center gap-5 mb-16"
         >
           {[
-            { icon: GithubIcon, href: PERSONAL.github, label: "GitHub" },
-            { icon: LinkedinIcon, href: PERSONAL.linkedin, label: "LinkedIn" },
-            { icon: Mail, href: `mailto:${PERSONAL.email}`, label: "Email" },
-          ].map(({ icon: Icon, href, label }) => (
+            {
+              icon: GithubIcon,
+              href: PERSONAL.github,
+              label: "GitHub",
+              action: "github",
+            },
+            {
+              icon: LinkedinIcon,
+              href: PERSONAL.linkedin,
+              label: "LinkedIn",
+              action: "linkedin",
+            },
+            {
+              icon: Mail,
+              href: `mailto:${PERSONAL.email}`,
+              label: "Email",
+              action: "email",
+            },
+          ].map(({ icon: Icon, href, label, action }) => (
             <motion.a
               key={label}
               href={href}
@@ -216,6 +235,7 @@ export function Hero() {
               rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
               aria-label={label}
               whileHover={{ scale: 1.1, y: -2 }}
+              onClick={() => track(action)}
               className="flex items-center justify-center w-10 h-10 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all duration-200"
             >
               <Icon size={18} />
