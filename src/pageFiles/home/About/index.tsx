@@ -48,36 +48,47 @@ export function About() {
           subtitle="I build scalable systems and lead teams to deliver high-impact software."
         />
 
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Left: Photo + Bio */}
+        <div className="grid lg:grid-cols-3 gap-12 lg:gap-16 items-start">
+          {/* Left: Profile Photo */}
           <FadeIn direction="left">
-            <div className="space-y-5">
-              {/* Profile photo */}
-              <div className="flex items-center gap-5 mb-2">
-                <motion.div
-                  whileHover={{ scale: 1.03 }}
-                  transition={{ duration: 0.25 }}
-                  className="relative w-20 h-20 rounded-2xl overflow-hidden border-2 border-indigo-800/60 shadow-xl shadow-indigo-900/30 shrink-0"
-                >
+            <div className="flex flex-col items-center lg:items-start gap-5">
+              {/* Photo */}
+              <motion.div
+                whileHover={{ scale: 1.02, rotate: 1 }}
+                transition={{ duration: 0.3 }}
+                className="relative"
+              >
+                {/* Glow ring */}
+                <div className="absolute -inset-1 rounded-3xl bg-gradient-to-br from-indigo-500/30 via-blue-500/20 to-violet-500/20 blur-xl" />
+                <div className="relative w-64 h-72 lg:w-full lg:h-80 rounded-3xl overflow-hidden border border-indigo-800/40 shadow-2xl shadow-indigo-950/60">
                   <Image
                     src="/profile.jpeg"
                     alt="Anuvrat Joshi"
                     fill
-                    sizes="80px"
-                    className="object-cover"
+                    sizes="(max-width: 1024px) 256px, 300px"
+                    className="object-cover object-top"
                     priority
                   />
-                </motion.div>
-                <div>
-                  <p className="text-white font-bold text-lg">
-                    {PERSONAL.name}
-                  </p>
-                  <p className="text-indigo-400 text-sm">{PERSONAL.role}</p>
-                  <p className="text-slate-500 text-xs mt-0.5">
-                    {PERSONAL.location}
-                  </p>
+                  {/* Subtle gradient overlay at bottom */}
+                  <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-slate-950/60 to-transparent" />
+                </div>
+              </motion.div>
+
+              {/* Name card below photo */}
+              <div className="text-center lg:text-left w-full">
+                <p className="text-white font-bold text-xl">{PERSONAL.name}</p>
+                <p className="text-indigo-400 text-sm mt-0.5">{PERSONAL.role}</p>
+                <div className="flex items-center justify-center lg:justify-start gap-1.5 mt-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-slate-500 text-xs">{PERSONAL.location}</span>
                 </div>
               </div>
+            </div>
+          </FadeIn>
+
+          {/* Middle: Bio */}
+          <FadeIn direction="up">
+            <div className="space-y-5">
               <p className="text-slate-300 text-lg leading-relaxed">
                 I'm a{" "}
                 <span className="text-white font-semibold">
@@ -127,7 +138,7 @@ export function About() {
 
           {/* Right: Highlights grid */}
           <StaggerContainer
-            className="grid sm:grid-cols-2 gap-4"
+            className="grid grid-cols-2 gap-4"
             staggerDelay={0.12}
           >
             {highlights.map(({ icon: Icon, title, description }) => (

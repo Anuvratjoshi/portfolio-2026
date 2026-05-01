@@ -19,11 +19,30 @@ const NAV_LINKS = [
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(`#${entry.target.id}`);
+          }
+        });
+      },
+      { rootMargin: "-30% 0px -65% 0px" },
+    );
+    NAV_LINKS.forEach(({ href }) => {
+      const el = document.querySelector(href);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
   }, []);
 
   const handleNav = (href: string) => {
@@ -63,9 +82,21 @@ export function Navbar() {
               <li key={link.href}>
                 <button
                   onClick={() => handleNav(link.href)}
-                  className="px-4 py-2 text-sm text-slate-400 hover:text-white transition-colors duration-200 rounded-lg hover:bg-white/5"
+                  className={cn(
+                    "relative px-4 py-2 text-sm transition-colors duration-200 rounded-lg",
+                    activeSection === link.href
+                      ? "text-white"
+                      : "text-slate-400 hover:text-white hover:bg-white/5",
+                  )}
                 >
-                  {link.label}
+                  {activeSection === link.href && (
+                    <motion.span
+                      layoutId="nav-indicator"
+                      className="absolute inset-0 rounded-lg bg-white/8"
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.4 }}
+                    />
+                  )}
+                  <span className="relative">{link.label}</span>
                 </button>
               </li>
             ))}
@@ -109,7 +140,12 @@ export function Navbar() {
                 <li key={link.href}>
                   <button
                     onClick={() => handleNav(link.href)}
-                    className="w-full text-left px-4 py-3 text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors duration-200"
+                    className={cn(
+                      "w-full text-left px-4 py-3 rounded-lg transition-colors duration-200",
+                      activeSection === link.href
+                        ? "text-white bg-white/8 font-medium"
+                        : "text-slate-300 hover:text-white hover:bg-white/5",
+                    )}
                   >
                     {link.label}
                   </button>
