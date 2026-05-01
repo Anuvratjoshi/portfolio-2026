@@ -4,6 +4,18 @@ import { useEffect, useState } from "react";
 import { Eye } from "lucide-react";
 import { motion } from "framer-motion";
 
+const VISITOR_ID_KEY = "aj_visitor_id";
+
+/** Returns the persistent visitor UUID, creating it on first call. */
+function getVisitorId(): string {
+  let id = localStorage.getItem(VISITOR_ID_KEY);
+  if (!id) {
+    id = crypto.randomUUID();
+    localStorage.setItem(VISITOR_ID_KEY, id);
+  }
+  return id;
+}
+
 function formatCount(n: number): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
   if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
@@ -15,10 +27,11 @@ export function VisitorCounter() {
   const [displayed, setDisplayed] = useState(0);
 
   useEffect(() => {
+    const visitorId = getVisitorId();
     fetch("/api/visitors", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: "{}",
+      body: JSON.stringify({ visitorId }),
     })
       .then((r) => r.json())
       .then((data) => setCount(data.count ?? 1))

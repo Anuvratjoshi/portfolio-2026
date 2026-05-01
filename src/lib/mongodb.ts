@@ -130,6 +130,14 @@ async function ensureCollections(db: Db): Promise<void> {
     );
 
     console.log(`${tag2} ✓ Collection 'visitors' ready (indexes ensured).`);
+
+    // ── visitor_ids collection (unique visitor deduplication) ────────────
+    const visitorIds = db.collection("visitor_ids");
+    await visitorIds.createIndex(
+      { visitorId: 1 },
+      { name: "visitorId_unique", unique: true, background: true },
+    );
+    console.log(`${tag2} ✓ Collection 'visitor_ids' ready.`);
   } catch (err) {
     // Non-fatal — app still works, just log it
     console.warn(
