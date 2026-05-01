@@ -64,7 +64,7 @@ export function OpenSource() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="View on npm"
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-950/40 border border-red-900/40 text-red-400 hover:bg-red-900/50 text-xs font-semibold transition-colors duration-200"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/40 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/50 text-xs font-semibold transition-colors duration-200"
                     >
                       npm
                       <ExternalLink size={11} />
@@ -113,8 +113,8 @@ export function OpenSource() {
                 <div
                   className={`mx-6 mb-5 p-4 rounded-xl border ${
                     pkg.callout.theme === "amber"
-                      ? "bg-amber-950/20 border-amber-800/30"
-                      : "bg-teal-950/20 border-teal-800/30"
+                      ? "bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800/30"
+                      : "bg-teal-50 dark:bg-teal-950/20 border-teal-200 dark:border-teal-800/30"
                   }`}
                 >
                   <div className="flex items-center gap-2 mb-3">
@@ -139,8 +139,8 @@ export function OpenSource() {
                         key={item}
                         className={`flex items-start gap-2.5 text-sm ${
                           pkg.callout!.theme === "amber"
-                            ? "text-amber-200/70"
-                            : "text-teal-200/70"
+                            ? "text-amber-700 dark:text-amber-200/70"
+                            : "text-teal-700 dark:text-teal-200/70"
                         }`}
                       >
                         <span

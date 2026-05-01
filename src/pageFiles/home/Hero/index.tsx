@@ -196,7 +196,7 @@ export function Hero() {
             download
             whileHover={{ scale: 1.03, y: -1 }}
             whileTap={{ scale: 0.97 }}
-            className="inline-flex items-center gap-2 px-7 py-3.5 bg-white/5 hover:bg-white/10 text-white font-semibold rounded-xl border border-white/10 transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-7 py-3.5 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-800 dark:text-white font-semibold rounded-xl border border-slate-200 dark:border-white/10 transition-colors duration-200"
           >
             <Download size={16} />
             Resume

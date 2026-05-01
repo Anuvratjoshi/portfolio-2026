@@ -43,5 +43,6 @@ next-env.d.ts
 
 # AI agent / editor instruction files (local dev tooling only)
 copilot.instruction.md
+copilot-bot.instruction.md
 AGENTS.md
 CLAUDE.md

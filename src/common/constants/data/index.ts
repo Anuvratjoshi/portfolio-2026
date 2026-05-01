@@ -59,10 +59,13 @@ export const SKILLS: Skill[] = [
     category: "AI Tools",
     items: [
       "GitHub Copilot",
-      "Grok Code Fast 1",
-      "Claude Sonnet",
+      "Groq Code Fast 1",
       "Anti Gravity",
       "AI-Assisted Workflows",
+      "Cursor AI",
+      "Claude",
+      "ChatGPT",
+      "OpenAI API",
     ],
   },
 ];
