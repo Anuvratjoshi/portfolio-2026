@@ -6,6 +6,7 @@ import { ArrowDown, Mail, Download, Sparkles } from "lucide-react";
 import { LinkedinIcon } from "@/common/components/ui/LinkedinIcon";
 import { GithubIcon } from "@/common/components/ui/GithubIcon";
 import { PERSONAL, STATS } from "@/common/constants/data";
+import { VisitorCounter } from "@/common/components/ui/VisitorCounter";
 
 const ROLES = [
   "Senior Full Stack Developer",
@@ -95,7 +96,6 @@ export function Hero() {
           </span>
           Available for new opportunities
         </motion.div>
-
         {/* Name */}
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
@@ -112,7 +112,6 @@ export function Hero() {
             {PERSONAL.name.split(" ")[1]}
           </span>
         </motion.h1>
-
         {/* Rotating role */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -135,7 +134,6 @@ export function Hero() {
             )}
           </AnimatePresence>
         </motion.div>
-
         {/* Role dots indicator */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -154,7 +152,6 @@ export function Hero() {
             />
           ))}
         </motion.div>
-
         {/* AI badge */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
@@ -165,7 +162,6 @@ export function Hero() {
           <Sparkles size={12} />
           AI-Enhanced Development Workflows
         </motion.div>
-
         {/* Summary */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -175,7 +171,6 @@ export function Hero() {
         >
           {PERSONAL.tagline}
         </motion.p>
-
         {/* CTAs */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -202,7 +197,6 @@ export function Hero() {
             Resume
           </motion.a>
         </motion.div>
-
         {/* Social Links */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -228,7 +222,6 @@ export function Hero() {
             </motion.a>
           ))}
         </motion.div>
-
         {/* Stats — animated counters */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -254,6 +247,10 @@ export function Hero() {
             </motion.div>
           ))}
         </motion.div>
+        {/* Visitor counter */}
+        <div className="flex justify-center">
+          <VisitorCounter />
+        </div>{" "}
       </div>
 
       {/* Scroll indicator */}
