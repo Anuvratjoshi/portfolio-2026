@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence, useInView } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowDown, Mail, Download, Sparkles } from "lucide-react";
 import { LinkedinIcon } from "@/common/components/ui/LinkedinIcon";
 import { GithubIcon } from "@/common/components/ui/GithubIcon";
@@ -11,34 +11,42 @@ const ROLES = [
   "Senior Full Stack Developer",
   "MERN Stack Engineer",
   "AI-Enhanced Developer",
-  "Tech Lead",
+  "Problem Solver",
 ];
 
 function AnimatedCounter({ value }: { value: string }) {
-  const match = value.match(/^(\d+)(.*)$/);
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true });
   const [displayed, setDisplayed] = useState(0);
 
+  // Parse once — stable values, not re-created every render
+  const { numeric, suffix, isNumeric } = useMemo(() => {
+    const m = value.match(/^(\d+)(.*)$/);
+    return m
+      ? { numeric: parseInt(m[1], 10), suffix: m[2], isNumeric: true }
+      : { numeric: 0, suffix: "", isNumeric: false };
+  }, [value]);
+
   useEffect(() => {
-    if (!isInView || !match) return;
-    const target = parseInt(match[1], 10);
+    if (!isInView || !isNumeric) return;
     const duration = 1400;
     const startTime = performance.now();
+    let rafId: number;
     const tick = (now: number) => {
       const progress = Math.min((now - startTime) / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
-      setDisplayed(Math.round(eased * target));
-      if (progress < 1) requestAnimationFrame(tick);
+      setDisplayed(Math.round(eased * numeric));
+      if (progress < 1) rafId = requestAnimationFrame(tick);
     };
-    requestAnimationFrame(tick);
-  }, [isInView, match]);
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
+  }, [isInView, isNumeric, numeric]);
 
-  if (!match) return <span ref={ref}>{value}</span>;
+  if (!isNumeric) return <span ref={ref}>{value}</span>;
   return (
     <span ref={ref}>
       {displayed}
-      {match[2]}
+      {suffix}
     </span>
   );
 }
@@ -92,7 +100,11 @@ export function Hero() {
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+          transition={{
+            duration: 0.7,
+            delay: 0.1,
+            ease: [0.25, 0.46, 0.45, 0.94],
+          }}
           className="text-5xl md:text-7xl lg:text-8xl font-extrabold text-white tracking-tight leading-none mb-6"
         >
           {PERSONAL.name.split(" ")[0]}{" "}

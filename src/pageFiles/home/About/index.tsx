@@ -56,11 +56,11 @@ export function About() {
               <motion.div
                 whileHover={{ scale: 1.02, rotate: 1 }}
                 transition={{ duration: 0.3 }}
-                className="relative"
+                className="relative w-64 lg:w-72"
               >
                 {/* Glow ring */}
-                <div className="absolute -inset-1 rounded-3xl bg-gradient-to-br from-indigo-500/30 via-blue-500/20 to-violet-500/20 blur-xl" />
-                <div className="relative w-64 h-72 lg:w-full lg:h-80 rounded-3xl overflow-hidden border border-indigo-800/40 shadow-2xl shadow-indigo-950/60">
+                <div className="absolute -inset-1 rounded-3xl bg-linear-to-br from-indigo-500/30 via-blue-500/20 to-violet-500/20 blur-xl" />
+                <div className="relative w-64 h-72 lg:w-72 lg:h-80 rounded-3xl overflow-hidden border border-indigo-800/40 shadow-2xl shadow-indigo-950/60">
                   <Image
                     src="/profile.jpeg"
                     alt="Anuvrat Joshi"
@@ -70,17 +70,21 @@ export function About() {
                     priority
                   />
                   {/* Subtle gradient overlay at bottom */}
-                  <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-slate-950/60 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 h-16 bg-linear-to-t from-slate-950/60 to-transparent" />
                 </div>
               </motion.div>
 
               {/* Name card below photo */}
               <div className="text-center lg:text-left w-full">
                 <p className="text-white font-bold text-xl">{PERSONAL.name}</p>
-                <p className="text-indigo-400 text-sm mt-0.5">{PERSONAL.role}</p>
+                <p className="text-indigo-400 text-sm mt-0.5">
+                  {PERSONAL.role}
+                </p>
                 <div className="flex items-center justify-center lg:justify-start gap-1.5 mt-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-slate-500 text-xs">{PERSONAL.location}</span>
+                  <span className="text-slate-500 text-xs">
+                    {PERSONAL.location}
+                  </span>
                 </div>
               </div>
             </div>
