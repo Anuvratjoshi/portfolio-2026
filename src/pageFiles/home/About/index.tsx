@@ -40,7 +40,10 @@ const highlights = [
 
 export function About() {
   return (
-    <section id="about" className="py-24 lg:py-32 bg-slate-950">
+    <section
+      id="about"
+      className="py-24 lg:py-32 bg-slate-50 dark:bg-slate-950"
+    >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <SectionHeading
           label="About Me"
@@ -60,7 +63,7 @@ export function About() {
               >
                 {/* Glow ring */}
                 <div className="absolute -inset-1 rounded-3xl bg-linear-to-br from-indigo-500/30 via-blue-500/20 to-violet-500/20 blur-xl" />
-                <div className="relative w-64 h-72 lg:w-72 lg:h-80 rounded-3xl overflow-hidden border border-indigo-800/40 shadow-2xl shadow-indigo-950/60">
+                <div className="relative w-64 h-72 lg:w-72 lg:h-80 rounded-3xl overflow-hidden border border-indigo-200 dark:border-indigo-800/40 shadow-2xl shadow-indigo-200/30 dark:shadow-indigo-950/60">
                   <Image
                     src="/profile.jpeg"
                     alt="Anuvrat Joshi"
@@ -70,13 +73,15 @@ export function About() {
                     priority
                   />
                   {/* Subtle gradient overlay at bottom */}
-                  <div className="absolute bottom-0 left-0 right-0 h-16 bg-linear-to-t from-slate-950/60 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 h-16 bg-linear-to-t from-slate-50/60 dark:from-slate-950/60 to-transparent" />
                 </div>
               </motion.div>
 
               {/* Name card below photo */}
               <div className="text-center lg:text-left w-full">
-                <p className="text-white font-bold text-xl">{PERSONAL.name}</p>
+                <p className="text-slate-900 dark:text-white font-bold text-xl">
+                  {PERSONAL.name}
+                </p>
                 <p className="text-indigo-400 text-sm mt-0.5">
                   {PERSONAL.role}
                 </p>
@@ -93,9 +98,9 @@ export function About() {
           {/* Middle: Bio */}
           <FadeIn direction="up">
             <div className="space-y-5">
-              <p className="text-slate-300 text-lg leading-relaxed">
+              <p className="text-slate-700 dark:text-slate-300 text-lg leading-relaxed">
                 I'm a{" "}
-                <span className="text-white font-semibold">
+                <span className="text-slate-900 dark:text-white font-semibold">
                   Senior Full Stack Developer
                 </span>{" "}
                 with{" "}
@@ -105,13 +110,13 @@ export function About() {
                 of hands-on expertise delivering scalable MERN stack
                 applications for production environments.
               </p>
-              <p className="text-slate-400 leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
                 My work spans architecting data pipelines, building real-time
                 systems, and crafting seamless UIs. I've driven measurable
                 improvements 30% latency reduction, 25% faster load times
                 through deep technical ownership.
               </p>
-              <p className="text-slate-400 leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
                 I'm also passionate about AI-assisted development. Using GitHub
                 Copilot with structured prompt engineering, I've built workflows
                 that accelerate feature delivery while maintaining
@@ -127,7 +132,7 @@ export function About() {
                   <div key={edu.institution} className="flex items-start gap-3">
                     <div className="mt-1 w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0" />
                     <div>
-                      <p className="text-white font-medium text-sm">
+                      <p className="text-slate-900 dark:text-white font-medium text-sm">
                         {edu.degree}
                       </p>
                       <p className="text-slate-500 text-sm">
@@ -150,15 +155,15 @@ export function About() {
                 key={title}
                 variants={staggerItem}
                 whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800/60 hover:border-indigo-800/60 transition-colors duration-300"
+                className="p-5 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/60 hover:border-indigo-300 dark:hover:border-indigo-800/60 transition-colors duration-300 shadow-sm dark:shadow-none"
               >
-                <div className="w-10 h-10 rounded-xl bg-indigo-950/80 border border-indigo-900/60 flex items-center justify-center mb-4">
+                <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-900/60 flex items-center justify-center mb-4">
                   <Icon size={18} className="text-indigo-400" />
                 </div>
-                <h3 className="text-white font-semibold mb-2 text-sm">
+                <h3 className="text-slate-900 dark:text-white font-semibold mb-2 text-sm">
                   {title}
                 </h3>
-                <p className="text-slate-500 text-sm leading-relaxed">
+                <p className="text-slate-500 dark:text-slate-500 text-sm leading-relaxed">
                   {description}
                 </p>
               </motion.div>

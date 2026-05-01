@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/common/components/layout/Navbar";
 import { Footer } from "@/common/components/layout/Footer";
+import { ThemeProvider } from "@/common/components/providers/ThemeProvider";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -51,11 +52,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased dark`}>
-      <body className="min-h-full flex flex-col bg-slate-950 text-slate-100">
-        <Navbar />
-        <div className="flex-1">{children}</div>
-        <Footer />
+    <html
+      lang="en"
+      className={`${inter.variable} h-full antialiased`}
+      suppressHydrationWarning
+    >
+      <body className="min-h-full flex flex-col bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
+        <ThemeProvider>
+          <Navbar />
+          <div className="flex-1">{children}</div>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

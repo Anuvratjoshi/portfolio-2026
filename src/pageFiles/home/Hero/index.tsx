@@ -72,13 +72,13 @@ export function Hero() {
   };
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-slate-950">
+    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-white dark:bg-slate-950">
       {/* Ambient background */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-blue-600/8 rounded-full blur-3xl" />
-        <div className="absolute top-2/3 left-1/2 w-64 h-64 bg-violet-600/6 rounded-full blur-3xl" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b12_1px,transparent_1px),linear-gradient(to_bottom,#1e293b12_1px,transparent_1px)] bg-size-[60px_60px]" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-500/8 dark:bg-indigo-600/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-blue-500/6 dark:bg-blue-600/8 rounded-full blur-3xl" />
+        <div className="absolute top-2/3 left-1/2 w-64 h-64 bg-violet-500/5 dark:bg-violet-600/6 rounded-full blur-3xl" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#64748b08_1px,transparent_1px),linear-gradient(to_bottom,#64748b08_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b12_1px,transparent_1px),linear-gradient(to_bottom,#1e293b12_1px,transparent_1px)] bg-size-[60px_60px]" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pt-24 pb-16 text-center">
@@ -87,7 +87,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-950/60 border border-indigo-800/40 text-indigo-300 text-sm font-medium mb-8 backdrop-blur-sm"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800/40 text-indigo-600 dark:text-indigo-300 text-sm font-medium mb-8 backdrop-blur-sm"
         >
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75" />
@@ -105,7 +105,7 @@ export function Hero() {
             delay: 0.1,
             ease: [0.25, 0.46, 0.45, 0.94],
           }}
-          className="text-5xl md:text-7xl lg:text-8xl font-extrabold text-white tracking-tight leading-none mb-6"
+          className="text-5xl md:text-7xl lg:text-8xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-none mb-6"
         >
           {PERSONAL.name.split(" ")[0]}{" "}
           <span className="bg-linear-to-r from-indigo-400 via-blue-400 to-indigo-300 bg-clip-text text-transparent">
@@ -128,7 +128,7 @@ export function Hero() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -16 }}
                 transition={{ duration: 0.32, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="text-xl md:text-2xl text-slate-300 font-light"
+                className="text-xl md:text-2xl text-slate-600 dark:text-slate-300 font-light"
               >
                 {ROLES[roleIndex]}
               </motion.span>
@@ -171,7 +171,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.35 }}
-          className="max-w-2xl mx-auto text-base md:text-lg text-slate-400 leading-relaxed mb-10"
+          className="max-w-2xl mx-auto text-base md:text-lg text-slate-600 dark:text-slate-400 leading-relaxed mb-10"
         >
           {PERSONAL.tagline}
         </motion.p>
@@ -222,7 +222,7 @@ export function Hero() {
               rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
               aria-label={label}
               whileHover={{ scale: 1.1, y: -2 }}
-              className="flex items-center justify-center w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-400 hover:text-white transition-all duration-200"
+              className="flex items-center justify-center w-10 h-10 rounded-xl bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all duration-200"
             >
               <Icon size={18} />
             </motion.a>
@@ -243,7 +243,7 @@ export function Hero() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4, delay: 0.7 + i * 0.08 }}
               whileHover={{ scale: 1.05, borderColor: "rgba(99,102,241,0.4)" }}
-              className="flex flex-col items-center p-4 rounded-xl bg-white/3 border border-white/8 backdrop-blur-sm transition-colors duration-200"
+              className="flex flex-col items-center p-4 rounded-xl bg-slate-50 dark:bg-white/3 border border-slate-200 dark:border-white/8 backdrop-blur-sm transition-colors duration-200"
             >
               <span className="text-2xl font-bold text-indigo-400">
                 <AnimatedCounter value={stat.value} />
@@ -262,7 +262,7 @@ export function Hero() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 1 }}
         onClick={() => handleScroll("#about")}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-slate-600 hover:text-slate-400 transition-colors"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-slate-400 dark:text-slate-600 hover:text-slate-600 dark:hover:text-slate-400 transition-colors"
         aria-label="Scroll to about"
       >
         <motion.div

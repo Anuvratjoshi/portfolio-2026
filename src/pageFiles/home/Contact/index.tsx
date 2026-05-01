@@ -58,7 +58,7 @@ export function Contact() {
   return (
     <section
       id="contact"
-      className="py-24 lg:py-32 bg-linear-to-b from-slate-950 to-slate-950"
+      className="py-24 lg:py-32 bg-slate-50 dark:bg-slate-950"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <SectionHeading
@@ -72,10 +72,10 @@ export function Contact() {
           <FadeIn direction="left">
             <div className="space-y-8">
               <div>
-                <h3 className="text-white font-semibold text-xl mb-3">
+                <h3 className="text-slate-900 dark:text-white font-semibold text-xl mb-3">
                   Why work with me?
                 </h3>
-                <p className="text-slate-400 leading-relaxed">
+                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
                   I bring 3+ years of production MERN stack experience,
                   AI-enhanced development workflows, and a senior
                   engineer&apos;s approach to architecture and mentorship.
@@ -111,7 +111,7 @@ export function Contact() {
                   },
                 ].map(({ icon: Icon, label, value, href }) => (
                   <div key={label} className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800/60 flex items-center justify-center shrink-0">
+                    <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800/60 flex items-center justify-center shrink-0">
                       <Icon size={16} className="text-indigo-400" />
                     </div>
                     <div>
@@ -129,12 +129,14 @@ export function Contact() {
                               ? "noopener noreferrer"
                               : undefined
                           }
-                          className="text-slate-300 hover:text-white text-sm transition-colors"
+                          className="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-sm transition-colors"
                         >
                           {value}
                         </a>
                       ) : (
-                        <p className="text-slate-300 text-sm">{value}</p>
+                        <p className="text-slate-700 dark:text-slate-300 text-sm">
+                          {value}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -153,7 +155,7 @@ export function Contact() {
               <div>
                 <label
                   htmlFor="name"
-                  className="block text-sm font-medium text-slate-400 mb-2"
+                  className="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2"
                 >
                   Name
                 </label>
@@ -163,7 +165,7 @@ export function Contact() {
                   autoComplete="name"
                   {...register("name")}
                   placeholder="Your name"
-                  className="w-full px-4 py-3 rounded-xl bg-slate-900/60 border border-slate-800/60 text-white placeholder:text-slate-600 text-sm focus:outline-none focus:border-indigo-600/60 focus:ring-1 focus:ring-indigo-600/40 transition-colors duration-200"
+                  className="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/60 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 text-sm focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-600/60 focus:ring-1 focus:ring-indigo-500/40 dark:focus:ring-indigo-600/40 transition-colors duration-200"
                 />
                 {errors.name && (
                   <p className="mt-1.5 text-xs text-red-400">
@@ -175,7 +177,7 @@ export function Contact() {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-slate-400 mb-2"
+                  className="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2"
                 >
                   Email
                 </label>
@@ -185,7 +187,7 @@ export function Contact() {
                   autoComplete="email"
                   {...register("email")}
                   placeholder="your@email.com"
-                  className="w-full px-4 py-3 rounded-xl bg-slate-900/60 border border-slate-800/60 text-white placeholder:text-slate-600 text-sm focus:outline-none focus:border-indigo-600/60 focus:ring-1 focus:ring-indigo-600/40 transition-colors duration-200"
+                  className="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/60 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 text-sm focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-600/60 focus:ring-1 focus:ring-indigo-500/40 dark:focus:ring-indigo-600/40 transition-colors duration-200"
                 />
                 {errors.email && (
                   <p className="mt-1.5 text-xs text-red-400">
@@ -197,7 +199,7 @@ export function Contact() {
               <div>
                 <label
                   htmlFor="message"
-                  className="block text-sm font-medium text-slate-400 mb-2"
+                  className="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2"
                 >
                   Message
                 </label>
@@ -206,7 +208,7 @@ export function Contact() {
                   rows={5}
                   {...register("message")}
                   placeholder="Tell me about your project or opportunity..."
-                  className="w-full px-4 py-3 rounded-xl bg-slate-900/60 border border-slate-800/60 text-white placeholder:text-slate-600 text-sm focus:outline-none focus:border-indigo-600/60 focus:ring-1 focus:ring-indigo-600/40 transition-colors duration-200 resize-none"
+                  className="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/60 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 text-sm focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-600/60 focus:ring-1 focus:ring-indigo-500/40 dark:focus:ring-indigo-600/40 transition-colors duration-200 resize-none"
                 />
                 {errors.message && (
                   <p className="mt-1.5 text-xs text-red-400">

@@ -8,7 +8,10 @@ import { EXPERIENCES } from "@/common/constants/data";
 
 export function Experience() {
   return (
-    <section id="experience" className="py-24 lg:py-32 bg-slate-900">
+    <section
+      id="experience"
+      className="py-24 lg:py-32 bg-slate-50 dark:bg-slate-900"
+    >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <SectionHeading
           label="Experience"
@@ -35,7 +38,7 @@ export function Experience() {
                       whileInView={{ scale: 1 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.4, delay: i * 0.12 + 0.2 }}
-                      className="w-16 h-16 rounded-2xl bg-indigo-950/80 border border-indigo-800/60 flex items-center justify-center shadow-lg"
+                      className="w-16 h-16 rounded-2xl bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-800/60 flex items-center justify-center shadow-lg"
                     >
                       <span className="text-indigo-400 font-bold text-lg">
                         {exp.company.slice(0, 2)}
@@ -45,10 +48,10 @@ export function Experience() {
 
                   {/* Content */}
                   <div className="flex-1 pb-2">
-                    <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800/60 hover:border-slate-700/80 transition-colors duration-300">
+                    <div className="p-6 rounded-2xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800/60 hover:border-slate-300 dark:hover:border-slate-700/80 transition-colors duration-300 shadow-sm dark:shadow-none">
                       <div className="flex flex-wrap items-start justify-between gap-2 mb-3">
                         <div>
-                          <h3 className="text-white font-bold text-lg">
+                          <h3 className="text-slate-900 dark:text-white font-bold text-lg">
                             {exp.role}
                           </h3>
                           <p className="text-indigo-400 font-semibold text-sm">
@@ -77,7 +80,7 @@ export function Experience() {
                         {exp.bullets.map((bullet, j) => (
                           <li
                             key={j}
-                            className="flex items-start gap-2.5 text-slate-400 text-sm leading-relaxed"
+                            className="flex items-start gap-2.5 text-slate-600 dark:text-slate-400 text-sm leading-relaxed"
                           >
                             <span className="mt-2 w-1 h-1 rounded-full bg-indigo-500 shrink-0" />
                             {bullet}

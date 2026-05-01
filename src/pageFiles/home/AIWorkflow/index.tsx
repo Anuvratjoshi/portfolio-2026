@@ -13,7 +13,10 @@ const icons = [Bot, FileCode2, Workflow, Lightbulb, Bug];
 
 export function AIWorkflow() {
   return (
-    <section id="ai-workflow" className="py-24 lg:py-32 bg-slate-950">
+    <section
+      id="ai-workflow"
+      className="py-24 lg:py-32 bg-white dark:bg-slate-950"
+    >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <SectionHeading
           label="AI Workflow"
@@ -57,15 +60,15 @@ export function AIWorkflow() {
                 variants={staggerItem}
                 whileHover={{ y: -4 }}
                 transition={{ duration: 0.2 }}
-                className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800/60 hover:border-indigo-800/50 transition-colors duration-300 group"
+                className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/60 hover:border-indigo-300 dark:hover:border-indigo-800/50 transition-colors duration-300 group shadow-sm dark:shadow-none"
               >
-                <div className="w-10 h-10 rounded-xl bg-indigo-950/80 border border-indigo-900/60 flex items-center justify-center mb-4 group-hover:bg-indigo-900/60 transition-colors duration-300">
+                <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-900/60 flex items-center justify-center mb-4 group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/60 transition-colors duration-300">
                   <Icon size={18} className="text-indigo-400" />
                 </div>
-                <h3 className="text-white font-semibold mb-2 text-sm">
+                <h3 className="text-slate-900 dark:text-white font-semibold mb-2 text-sm">
                   {item.title}
                 </h3>
-                <p className="text-slate-500 text-sm leading-relaxed">
+                <p className="text-slate-600 dark:text-slate-500 text-sm leading-relaxed">
                   {item.description}
                 </p>
               </motion.div>
@@ -81,7 +84,9 @@ export function AIWorkflow() {
           transition={{ duration: 0.5, delay: 0.3 }}
           className="flex flex-wrap items-center justify-center gap-3 mt-12"
         >
-          <span className="text-slate-600 text-sm">Powered by:</span>
+          <span className="text-slate-400 dark:text-slate-600 text-sm">
+            Powered by:
+          </span>
           {[
             "GitHub Copilot",
             "Grok Code Fast 1",
@@ -90,7 +95,7 @@ export function AIWorkflow() {
           ].map((tool) => (
             <span
               key={tool}
-              className="px-3 py-1.5 text-xs font-medium rounded-lg bg-indigo-950/50 border border-indigo-900/50 text-indigo-300"
+              className="px-3 py-1.5 text-xs font-medium rounded-lg bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-900/50 text-indigo-600 dark:text-indigo-300"
             >
               {tool}
             </span>

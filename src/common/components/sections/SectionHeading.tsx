@@ -38,7 +38,7 @@ export function SectionHeading({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight"
+        className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white leading-tight"
       >
         {title}
       </motion.h2>
@@ -48,7 +48,7 @@ export function SectionHeading({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="mt-4 text-lg text-slate-400 max-w-2xl mx-auto"
+          className="mt-4 text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto"
         >
           {subtitle}
         </motion.p>

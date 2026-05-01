@@ -10,19 +10,25 @@ import {
 import { SKILLS } from "@/common/constants/data";
 
 const categoryColors: Record<string, string> = {
-  Languages: "text-violet-400 border-violet-900/60 bg-violet-950/30",
-  Frontend: "text-blue-400 border-blue-900/60 bg-blue-950/30",
-  Backend: "text-emerald-400 border-emerald-900/60 bg-emerald-950/30",
-  Databases: "text-amber-400 border-amber-900/60 bg-amber-950/30",
-  "Tools & DevOps": "text-slate-400 border-slate-700/60 bg-slate-800/30",
-  "AI Tools": "text-pink-400 border-pink-900/60 bg-pink-950/30",
+  Languages:
+    "text-violet-600 dark:text-violet-400 border-violet-200 dark:border-violet-900/60 bg-violet-50 dark:bg-violet-950/30",
+  Frontend:
+    "text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-900/60 bg-blue-50 dark:bg-blue-950/30",
+  Backend:
+    "text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/60 bg-emerald-50 dark:bg-emerald-950/30",
+  Databases:
+    "text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-900/60 bg-amber-50 dark:bg-amber-950/30",
+  "Tools & DevOps":
+    "text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-700/60 bg-slate-100 dark:bg-slate-800/30",
+  "AI Tools":
+    "text-pink-600 dark:text-pink-400 border-pink-200 dark:border-pink-900/60 bg-pink-50 dark:bg-pink-950/30",
 };
 
 export function Skills() {
   return (
     <section
       id="skills"
-      className="py-24 lg:py-32 bg-linear-to-b from-slate-950 to-slate-900"
+      className="py-24 lg:py-32 bg-white dark:bg-gradient-to-b dark:from-slate-950 dark:to-slate-900"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <SectionHeading
@@ -45,9 +51,9 @@ export function Skills() {
                 variants={staggerItem}
                 whileHover={{ y: -3 }}
                 transition={{ duration: 0.2 }}
-                className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800/60 hover:border-slate-700/80 transition-colors duration-300"
+                className="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/60 hover:border-slate-300 dark:hover:border-slate-700/80 transition-colors duration-300 shadow-sm dark:shadow-none"
               >
-                <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">
+                <h3 className="text-slate-800 dark:text-white font-semibold mb-4 text-sm uppercase tracking-wider">
                   {skill.category}
                 </h3>
                 <div className="flex flex-wrap gap-2">
