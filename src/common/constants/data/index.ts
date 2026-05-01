@@ -197,7 +197,7 @@ export const AI_WORKFLOW = [
 
 export const EDUCATION = [
   {
-    degree: "B.Tech in Computer Science",
+    degree: "B.Tech in Mechanical Engineering",
     institution: "THDC Institute of Hydropower Engineering & Technology",
     type: "university",
   },

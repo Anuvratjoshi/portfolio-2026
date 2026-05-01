@@ -79,7 +79,7 @@ CLI tool + Node.js library that parses backend TypeScript with ts-morph, strips 
 npm: https://www.npmjs.com/package/@joshianuvrat/type-bridge
 
 ## EDUCATION
-- B.Tech in Computer Science — THDC Institute of Hydropower Engineering & Technology
+- B.Tech in Mechanical Engineering — THDC Institute of Hydropower Engineering & Technology
 - Full Stack Bootcamp — 10X Academy
 
 ## AI WORKFLOW
