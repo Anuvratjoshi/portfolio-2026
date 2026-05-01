@@ -4,6 +4,7 @@ import "./globals.css";
 import { Navbar } from "@/common/components/layout/Navbar";
 import { Footer } from "@/common/components/layout/Footer";
 import { ThemeProvider } from "@/common/components/providers/ThemeProvider";
+import { ChatBot } from "@/common/components/ui/ChatBot";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -62,6 +63,7 @@ export default function RootLayout({
           <Navbar />
           <div className="flex-1">{children}</div>
           <Footer />
+          <ChatBot />
         </ThemeProvider>
       </body>
     </html>
