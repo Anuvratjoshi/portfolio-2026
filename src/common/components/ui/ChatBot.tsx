@@ -330,9 +330,9 @@ const MessageBubble = memo(function MessageBubble({
             <Bot size={14} className="text-white" />
           </div>
         )}
-        <div className="flex flex-col gap-1 max-w-[82%]">
+        <div className="flex flex-col gap-1 max-w-[82%] min-w-0">
           <div
-            className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
+            className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap wrap-break-word ${
               isUser
                 ? "bg-indigo-600 text-white rounded-br-sm"
                 : "bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-bl-sm"
