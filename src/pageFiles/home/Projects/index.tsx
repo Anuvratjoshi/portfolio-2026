@@ -2,13 +2,15 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ArrowRight } from "lucide-react";
+import { GithubIcon } from "@/common/components/ui/GithubIcon";
 import { SectionHeading } from "@/common/components/sections/SectionHeading";
 import {
   StaggerContainer,
   staggerItem,
 } from "@/common/components/animations/FadeIn";
 import { PROJECTS } from "@/common/constants/data";
+import { PERSONAL } from "@/common/constants/data";
 
 export function Projects() {
   const [expanded, setExpanded] = useState<number | null>(0);
@@ -112,6 +114,40 @@ export function Projects() {
             </motion.div>
           ))}
         </StaggerContainer>
+
+        {/* More projects teaser */}
+        <motion.a
+          href={PERSONAL.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          whileHover="hover"
+          className="mt-6 flex items-center justify-between gap-4 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500 bg-slate-50/60 dark:bg-slate-900/40 hover:bg-indigo-50/40 dark:hover:bg-indigo-950/30 px-6 py-5 transition-colors duration-300 group cursor-pointer"
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 group-hover:border-indigo-300 dark:group-hover:border-indigo-700 flex items-center justify-center transition-colors shrink-0">
+              <GithubIcon className="text-slate-400 group-hover:text-indigo-500 transition-colors" />
+            </div>
+            <div>
+              <p className="text-slate-800 dark:text-slate-200 font-semibold text-sm group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                …and a lot more
+              </p>
+              <p className="text-slate-400 dark:text-slate-500 text-xs mt-0.5">
+                OSS tools, side projects, experiments — all on GitHub
+              </p>
+            </div>
+          </div>
+          <motion.div
+            variants={{ hover: { x: 4 } }}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
+            className="text-slate-400 group-hover:text-indigo-500 transition-colors shrink-0"
+          >
+            <ArrowRight size={18} />
+          </motion.div>
+        </motion.a>
       </div>
     </section>
   );

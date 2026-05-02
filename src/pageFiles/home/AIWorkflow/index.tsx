@@ -75,32 +75,6 @@ export function AIWorkflow() {
             );
           })}
         </StaggerContainer>
-
-        {/* Model badges */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="flex flex-wrap items-center justify-center gap-3 mt-12"
-        >
-          <span className="text-slate-400 dark:text-slate-600 text-sm">
-            Powered by:
-          </span>
-          {[
-            "GitHub Copilot",
-            "Grok Code Fast 1",
-            "Claude Sonnet",
-            "Prompt Engineering",
-          ].map((tool) => (
-            <span
-              key={tool}
-              className="px-3 py-1.5 text-xs font-medium rounded-lg bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-900/50 text-indigo-600 dark:text-indigo-300"
-            >
-              {tool}
-            </span>
-          ))}
-        </motion.div>
       </div>
     </section>
   );
