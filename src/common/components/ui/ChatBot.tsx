@@ -313,7 +313,6 @@ const MessageBubble = memo(function MessageBubble({
   const isUser = msg.role === "user";
   return (
     <motion.div
-      layout="position"
       initial={{ opacity: 0, y: 8, scale: 0.97 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{
@@ -623,6 +622,7 @@ export function ChatBot() {
   const [loading, setLoading] = useState(false);
   const [unread, setUnread] = useState(0);
   const [hydrated, setHydrated] = useState(false);
+  const [showHint, setShowHint] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -632,6 +632,22 @@ export function ChatBot() {
     if (saved.length > 0)
       setMessages([{ ...INIT_MSG, timestamp: Date.now() }, ...saved]);
     setHydrated(true);
+  }, []);
+
+  // First-visit hint bubble — show once, auto-dismiss after 6s
+  useEffect(() => {
+    const HINT_KEY = "aj_bot_hint_seen";
+    if (typeof localStorage === "undefined") return;
+    if (localStorage.getItem(HINT_KEY)) return;
+    const show = setTimeout(() => setShowHint(true), 2200);
+    const hide = setTimeout(() => {
+      setShowHint(false);
+      localStorage.setItem(HINT_KEY, "1");
+    }, 8200);
+    return () => {
+      clearTimeout(show);
+      clearTimeout(hide);
+    };
   }, []);
 
   // Persist whenever messages change
@@ -653,17 +669,25 @@ export function ChatBot() {
     }
   }, [open, view]);
 
+  const dismissHint = useCallback(() => {
+    setShowHint(false);
+    try {
+      localStorage.setItem("aj_bot_hint_seen", "1");
+    } catch {}
+  }, []);
+
   // ⌘K / Ctrl+K shortcut
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
         setOpen((v) => !v);
+        dismissHint();
       }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, []);
+  }, [dismissHint]);
 
   const handleReact = useCallback((id: string, reaction: "up" | "down") => {
     setMessages((prev) =>
@@ -824,42 +848,76 @@ export function ChatBot() {
     <>
       {/* FAB */}
       <motion.button
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => {
+          setOpen((v) => !v);
+          dismissHint();
+        }}
         aria-label={open ? "Close chat" : "Open AJ Bot"}
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.94 }}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-2xl bg-indigo-600 hover:bg-indigo-500 shadow-lg shadow-indigo-900/40 flex items-center justify-center transition-colors duration-200"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.92 }}
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-2xl flex items-center justify-center"
+        style={{ isolation: "isolate" }}
       >
-        <AnimatePresence mode="wait" initial={false}>
-          {open ? (
-            <motion.span
-              key="close"
-              initial={{ rotate: -90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: 90, opacity: 0 }}
-              transition={{ duration: 0.18 }}
-            >
-              <X size={22} className="text-white" />
-            </motion.span>
-          ) : (
-            <motion.span
-              key="open"
-              initial={{ rotate: 90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: -90, opacity: 0 }}
-              transition={{ duration: 0.18 }}
-            >
-              <Bot size={22} className="text-white" />
-            </motion.span>
-          )}
-        </AnimatePresence>
+        {/* Glow layer */}
+        <span className="absolute inset-0 rounded-2xl bg-linear-to-br from-indigo-500 via-violet-500 to-purple-600 blur-md opacity-70 scale-110" />
+        {/* Main gradient face */}
+        <span className="absolute inset-0 rounded-2xl bg-linear-to-br from-indigo-500 via-violet-500 to-purple-600 shadow-lg shadow-indigo-700/50" />
+        {/* Shine sweep — animated */}
         {!open && (
           <motion.span
-            className="absolute inset-0 rounded-2xl border-2 border-indigo-400"
-            animate={{ scale: [1, 1.35], opacity: [0.6, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity }}
+            className="absolute inset-0 rounded-2xl overflow-hidden"
+            aria-hidden
+          >
+            <motion.span
+              className="absolute top-0 h-full w-1/2 skew-x-[-20deg]"
+              style={{
+                background:
+                  "linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent)",
+              }}
+              animate={{ left: ["-100%", "200%"] }}
+              transition={{
+                duration: 1.6,
+                repeat: Infinity,
+                repeatDelay: 2.2,
+                ease: "easeInOut",
+              }}
+            />
+          </motion.span>
+        )}
+        {/* Pulse ring */}
+        {!open && (
+          <motion.span
+            className="absolute inset-0 rounded-2xl border-2 border-violet-400"
+            animate={{ scale: [1, 1.5], opacity: [0.7, 0] }}
+            transition={{ duration: 1.6, repeat: Infinity, ease: "easeOut" }}
           />
         )}
+        {/* Icon */}
+        <span className="relative z-10">
+          <AnimatePresence mode="wait" initial={false}>
+            {open ? (
+              <motion.span
+                key="close"
+                initial={{ rotate: -90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                exit={{ rotate: 90, opacity: 0 }}
+                transition={{ duration: 0.18 }}
+              >
+                <X size={22} className="text-white" />
+              </motion.span>
+            ) : (
+              <motion.span
+                key="open"
+                initial={{ rotate: 90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                exit={{ rotate: -90, opacity: 0 }}
+                transition={{ duration: 0.18 }}
+              >
+                <Bot size={22} className="text-white drop-shadow-sm" />
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </span>
         <AnimatePresence>
           {!open && unread > 0 && (
             <motion.span
@@ -867,7 +925,7 @@ export function ChatBot() {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0 }}
-              className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center"
+              className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center z-20"
             >
               {unread}
             </motion.span>
@@ -875,9 +933,52 @@ export function ChatBot() {
         </AnimatePresence>
       </motion.button>
 
+      {/* First-visit hint bubble */}
+      <AnimatePresence>
+        {showHint && !open && (
+          <motion.div
+            key="hint-bubble"
+            initial={{ opacity: 0, scale: 0.85, x: 12 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            exit={{ opacity: 0, scale: 0.85, x: 12 }}
+            transition={{ type: "spring", stiffness: 380, damping: 26 }}
+            className="fixed bottom-6 right-22 z-50"
+          >
+            {/* Bubble */}
+            <div
+              className="relative bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3 max-w-50"
+              style={{
+                boxShadow:
+                  "0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.08)",
+              }}
+            >
+              <button
+                onClick={dismissHint}
+                className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-600 text-slate-500 dark:text-slate-300 flex items-center justify-center hover:bg-slate-300 dark:hover:bg-slate-500 transition-colors text-[10px] font-bold"
+                aria-label="Dismiss"
+              >
+                ✕
+              </button>
+              <p className="text-slate-800 dark:text-white font-semibold text-xs leading-snug">
+                👋 Ask me anything!
+              </p>
+              <p className="text-slate-500 dark:text-slate-400 text-[11px] mt-0.5 leading-snug">
+                I know everything about Anuvrat.
+              </p>
+              {/* Arrow pointing right toward FAB */}
+              <span className="absolute -right-1.75 top-1/2 w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-l-[7px] border-l-white dark:border-l-slate-800" />
+              <span
+                className="-right-2 top-1/2 absolute w-0 h-0 border-t-[7px] border-t-transparent border-b-[7px] border-b-transparent border-l-8 border-l-slate-200 dark:border-l-slate-700"
+                style={{ zIndex: -1 }}
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* ⌘K hint */}
       <AnimatePresence>
-        {!open && (
+        {!open && !showHint && (
           <motion.div
             initial={{ opacity: 0, x: 8 }}
             animate={{ opacity: 1, x: 0 }}

@@ -56,7 +56,10 @@ export default function RootLayout({
       className={`${inter.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
+      <body
+        suppressHydrationWarning
+        className="min-h-full flex flex-col bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300"
+      >
         <ThemeProvider>
           <SiteShell>{children}</SiteShell>
         </ThemeProvider>
