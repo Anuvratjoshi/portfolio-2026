@@ -226,6 +226,7 @@ function getFollowUps(content: string): string[] {
 // ─── localStorage helpers ─────────────────────────────────────────────────────
 
 const LS_KEY = "aj_bot_messages";
+const SESSION_ID_KEY = "aj_chat_session";
 
 function loadMessages(): Message[] {
   try {
@@ -718,10 +719,19 @@ export function ChatBot() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            messages: nextMessages.map(({ role, content }) => ({
-              role,
-              content,
-            })),
+            sessionId: (() => {
+              try {
+                let sid = localStorage.getItem(SESSION_ID_KEY);
+                if (!sid) {
+                  sid = crypto.randomUUID();
+                  localStorage.setItem(SESSION_ID_KEY, sid);
+                }
+                return sid;
+              } catch {
+                return crypto.randomUUID();
+              }
+            })(),
+            message: trimmed,
             visitorId: (() => {
               try {
                 return localStorage.getItem("aj_visitor_id") ?? "anonymous";
@@ -829,6 +839,15 @@ export function ChatBot() {
     setInput("");
     setView("chat");
     try {
+      const sid = localStorage.getItem(SESSION_ID_KEY);
+      if (sid) {
+        localStorage.removeItem(SESSION_ID_KEY);
+        fetch("/api/chat/session", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sessionId: sid }),
+        }).catch(() => {});
+      }
       localStorage.removeItem(LS_KEY);
     } catch {}
   };

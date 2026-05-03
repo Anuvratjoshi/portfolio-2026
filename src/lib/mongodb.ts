@@ -156,6 +156,22 @@ async function ensureCollections(db: Db): Promise<void> {
     await gb.createIndex({ timestamp: -1 }, { background: true });
     await gb.createIndex({ approved: 1 }, { background: true });
     console.log(`${tag2} ✓ Collection 'guestbook' ready.`);
+
+    // ── chat_sessions collection (conversation memory, 7-day TTL) ─────────
+    const chatSessions = db.collection("chat_sessions");
+    await chatSessions.createIndex(
+      { sessionId: 1 },
+      { name: "sessionId_unique", unique: true, background: true },
+    );
+    await chatSessions.createIndex(
+      { updatedAt: 1 },
+      {
+        name: "updatedAt_ttl",
+        expireAfterSeconds: 7 * 24 * 60 * 60,
+        background: true,
+      },
+    );
+    console.log(`${tag2} ✓ Collection 'chat_sessions' ready (TTL: 7 days).`);
   } catch (err) {
     // Non-fatal — app still works, just log it
     console.warn(

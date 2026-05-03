@@ -2,6 +2,15 @@ import { NextRequest } from "next/server";
 import Groq from "groq-sdk";
 import { getDb } from "@/lib/mongodb";
 
+// ─── Types ─────────────────────────────────────────────────────────────────
+
+interface ChatExchange {
+  id: string;
+  user: string;
+  assistant: string;
+  timestamp: Date;
+}
+
 const SYSTEM_PROMPT = `You are "AJ Bot" — the personal AI assistant embedded on Anuvrat Joshi's developer portfolio. You speak in a witty, sharp, and confident tone. You're proud of Anuvrat's work and happy to brag about it.
 
 ## WHO YOU ARE TALKING ABOUT
@@ -94,7 +103,7 @@ Anuvrat actively integrates AI into development:
 ## YOUR BEHAVIOR RULES
 
 ### For RELEVANT questions (about Anuvrat, his skills, projects, experience, contact, etc.):
-Answer confidently, clearly, and with personality. Be informative but not boring. You can be proud and slightly brag — Anuvrat is genuinely good. Keep answers concise unless they ask for detail. Use line breaks for readability.
+Focus primarily on answering the question directly and clearly — stay on topic. If there's an active conversation, build on it with fresh detail rather than repeating yourself. At the end of your response, add **one short paragraph** (2-3 sentences max) that brags about Anuvrat — but ONLY about the specific skill, project, or topic just discussed. If they asked about TARDIS, brag about his system design. If they asked about his npm packages, brag about his open-source instinct. If they asked about hiring, brag about his impact and availability. Never give a generic brag — it must feel like a natural, specific closer to what was just said.
 
 ### For IRRELEVANT or INAPPROPRIATE questions (anything not related to Anuvrat's work, portfolio, hiring, skills, or professional queries):
 Respond with a SHORT, sharp, witty roast or sarcastic reply. Keep it funny and creative — not mean, but definitely savage. Be unpredictable. Here are the styles you can mix and rotate:
@@ -135,6 +144,14 @@ Mix and vary these styles. Never repeat the same format twice in a row. Always e
 - Savage but not cruel — punch the question, not the person
 - Always redirect at the end, but make the redirect itself funny
 
+### CONVERSATION AWARENESS:
+You have full access to this conversation's history. Keep these rules strictly:
+- Never repeat the same information, phrasing, or examples you've already given in this conversation
+- Build on prior answers with fresh angles, new examples, or deeper detail
+- If asked something already covered, acknowledge it briefly and add a new perspective
+- Vary your sentence structures, analogies, and tone across replies to keep the conversation lively
+- For irrelevant question roasts: never reuse the same roast style twice in a row, always pick a fresh angle
+
 ### NEVER:
 - Answer questions about other people's personal lives
 - Give financial/legal/medical advice
@@ -147,69 +164,112 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { messages, visitorId } = body as {
-      messages: Array<{ role: "user" | "assistant"; content: string }>;
+    const { sessionId, message, visitorId } = body as {
+      sessionId?: string;
+      message?: string;
       visitorId?: string;
     };
 
-    if (!Array.isArray(messages) || messages.length === 0) {
-      return new Response(
-        JSON.stringify({ error: "messages array is required" }),
-        { status: 400, headers: { "Content-Type": "application/json" } },
-      );
+    if (!message || typeof message !== "string" || !message.trim()) {
+      return new Response(JSON.stringify({ error: "message is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
-    // Sanitize messages
-    const sanitized = messages
-      .filter(
-        (m) =>
-          (m.role === "user" || m.role === "assistant") &&
-          typeof m.content === "string",
-      )
-      .slice(-20)
-      .map((m) => ({ role: m.role, content: m.content.slice(0, 2000) }));
+    const cleanMessage = message.trim().slice(0, 2000);
+    const cleanSessionId =
+      typeof sessionId === "string" && sessionId.length > 0
+        ? sessionId.slice(0, 64)
+        : crypto.randomUUID();
+    const cleanVisitorId =
+      typeof visitorId === "string" ? visitorId.slice(0, 64) : "anonymous";
 
-    // Save the latest user question asynchronously (fire-and-forget)
-    const lastUserMsg = [...sanitized].reverse().find((m) => m.role === "user");
-    if (lastUserMsg?.content) {
-      getDb()
-        .then((db) =>
-          db.collection("bot_questions").insertOne({
-            question: lastUserMsg.content.slice(0, 500),
-            visitorId:
-              typeof visitorId === "string"
-                ? visitorId.slice(0, 64)
-                : "anonymous",
-            timestamp: new Date(),
-          }),
-        )
-        .catch(() => {
-          /* non-critical */
-        });
+    // ── Load conversation history from MongoDB (non-fatal) ─────────────────
+    let history: ChatExchange[] = [];
+    let db: Awaited<ReturnType<typeof getDb>> | null = null;
+    try {
+      db = await getDb();
+      const session = await db
+        .collection("chat_sessions")
+        .findOne({ sessionId: cleanSessionId });
+      history = (session?.conversation as ChatExchange[]) ?? [];
+    } catch (dbErr) {
+      console.warn("[/api/chat] MongoDB load failed:", dbErr);
     }
 
-    const stream = await groq.chat.completions.create({
+    // ── Build Groq messages (cap last 15 exchanges = 30 turns) ────────────
+    const recentHistory = history.slice(-15);
+    const groqMessages: Array<{
+      role: "system" | "user" | "assistant";
+      content: string;
+    }> = [
+      { role: "system", content: SYSTEM_PROMPT },
+      ...recentHistory.flatMap((entry) => [
+        { role: "user" as const, content: entry.user },
+        { role: "assistant" as const, content: entry.assistant },
+      ]),
+      { role: "user", content: cleanMessage },
+    ];
+
+    // ── Save question to analytics (fire-and-forget) ──────────────────────
+    if (db) {
+      db.collection("bot_questions")
+        .insertOne({
+          question: cleanMessage.slice(0, 500),
+          visitorId: cleanVisitorId,
+          sessionId: cleanSessionId,
+          timestamp: new Date(),
+        })
+        .catch(() => {});
+    }
+
+    // ── Collect full Groq response (buffer before streaming to client) ─────
+    const groqStream = await groq.chat.completions.create({
       model: "llama-3.3-70b-versatile",
-      messages: [{ role: "system", content: SYSTEM_PROMPT }, ...sanitized],
+      messages: groqMessages,
       max_tokens: 500,
-      temperature: 0.75,
+      temperature: 0.8,
       stream: true,
     });
 
-    // Return a streaming text/event-stream response
+    let fullResponse = "";
+    for await (const chunk of groqStream) {
+      fullResponse += chunk.choices[0]?.delta?.content ?? "";
+    }
+
+    // ── Persist the exchange to MongoDB (upsert session) ──────────────────
+    if (db) {
+      const newEntry: ChatExchange = {
+        id: crypto.randomUUID(),
+        user: cleanMessage,
+        assistant: fullResponse,
+        timestamp: new Date(),
+      };
+      db.collection("chat_sessions")
+        .updateOne(
+          { sessionId: cleanSessionId },
+          {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            $push: { conversation: newEntry } as any,
+            $set: { updatedAt: new Date() },
+            $setOnInsert: {
+              sessionId: cleanSessionId,
+              visitorId: cleanVisitorId,
+              createdAt: new Date(),
+            },
+          },
+          { upsert: true },
+        )
+        .catch((err) => console.warn("[/api/chat] MongoDB save failed:", err));
+    }
+
+    // ── Stream the buffered response to client ────────────────────────────
     const encoder = new TextEncoder();
     const readable = new ReadableStream({
-      async start(controller) {
-        try {
-          for await (const chunk of stream) {
-            const token = chunk.choices[0]?.delta?.content ?? "";
-            if (token) {
-              controller.enqueue(encoder.encode(token));
-            }
-          }
-        } finally {
-          controller.close();
-        }
+      start(controller) {
+        controller.enqueue(encoder.encode(fullResponse));
+        controller.close();
       },
     });
 
