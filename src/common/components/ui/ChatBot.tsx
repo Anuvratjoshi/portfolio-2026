@@ -1168,7 +1168,7 @@ export function ChatBot() {
                     </AnimatePresence>
                     <form
                       onSubmit={handleSubmit}
-                      className="flex items-center gap-2 px-3 py-3 pt-1.5"
+                      className="flex flex-wrap items-center gap-2 px-3 py-3 pt-1.5"
                     >
                       {/* Feeling Lucky */}
                       <button
@@ -1177,7 +1177,7 @@ export function ChatBot() {
                         disabled={loading}
                         aria-label="Ask a random question about Anuvrat"
                         title="Ask a random question about Anuvrat"
-                        className="flex items-center gap-1.5 px-2.5 h-9 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-violet-50 hover:border-violet-200 hover:text-violet-600 dark:hover:bg-violet-950/50 dark:hover:text-violet-300 disabled:opacity-40 transition-colors duration-150 shrink-0"
+                        className="flex items-center gap-1.5 px-2.5 h-9 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-violet-50 hover:border-violet-200 hover:text-violet-600 dark:hover:bg-violet-950/50 dark:hover:text-violet-300 disabled:opacity-40 transition-colors duration-150 shrink-0 sm:w-full md:w-auto"
                       >
                         <Dice5 size={13} />
                         <span className="text-xs font-medium whitespace-nowrap">
