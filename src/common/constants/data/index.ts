@@ -165,6 +165,50 @@ export const PROJECTS: Project[] = [
       "Designed scalable APIs capable of handling growing user load without degradation in response times or assessment accuracy",
     ],
   },
+  {
+    title: "RentEase",
+    subtitle: "Rental Management SaaS — Side Hustle",
+    description:
+      "A SaaS product Anuvrat is actively building as a side hustle, targeting India's massively underserved rental management market. Nearly 95% of India's ₹2L+ crore rental ecosystem is still managed via WhatsApp, notebooks, and phone calls. RentEase is designed to be the operating system for independent landlords — simple, mobile-first, and built for users who are not necessarily tech-savvy. Frontend MVP is live; backend is in active development.",
+    link: "https://rent-ease-client-beta.vercel.app/",
+    linkLabel: "View Live Site",
+    badge: "Side Project · In Development",
+    tags: [
+      "Next.js",
+      "React.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Node.js",
+      "MongoDB",
+      "SaaS",
+      "socket.io",
+      "stripe",
+      "docker",
+      "Azure",
+    ],
+    bullets: [
+      "Market size: Knight Frank pegs India's rental housing market at $20B–$34B+, with continued growth projected through 2030 driven by urban migration, rising property prices, and workforce mobility (Knight Frank, 2019)",
+      "The gap: ET Edge Insights reports ~95% of India's rental inventory remains unorganised — landlords still operating via WhatsApp, notebooks, and phone calls in 2026",
+      "Target user: independent landlords managing 1–20 units who find enterprise tools too complex — a segment too small for institutions but too large to ignore",
+      "Moat: once a landlord uploads tenants, agreements, rent records, and documents, switching cost is high — natural SaaS retention with a recurring monthly loop",
+      "Status: frontend MVP live and deployed solo; backend in active development alongside full-time role — product thinking built from first principles",
+    ],
+    sources: [
+      {
+        label: "95% of India's rental market is unorganised — ET Edge Insights",
+        url: "https://etedge-insights.com/industry/real-estate/indias-rental-housing-problem-isnt-supply-its-standardisation/",
+      },
+      {
+        label: "Indian rental housing market valued $20B–$34B+ — Knight Frank",
+        url: "https://content.knightfrank.com/research/1004/documents/en/india-topical-reports-institutionalising-the-rental-housing-market-in-india-2019-6718.pdf",
+      },
+      {
+        label:
+          "India rental housing market growth forecast to 2030 — TechSci Research",
+        url: "https://www.techsciresearch.com/report/india-rental-housing-market/4811.html",
+      },
+    ],
+  },
 ];
 
 export const AI_WORKFLOW = [

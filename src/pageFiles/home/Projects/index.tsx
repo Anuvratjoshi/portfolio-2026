@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { ChevronDown, ArrowRight } from "lucide-react";
+import { ChevronDown, ArrowRight, ExternalLink } from "lucide-react";
 import { GithubIcon } from "@/common/components/ui/GithubIcon";
 import { SectionHeading } from "@/common/components/sections/SectionHeading";
 import {
@@ -47,9 +47,16 @@ export function Projects() {
                     </span>
                   </div>
                   <div>
-                    <h3 className="text-slate-900 dark:text-white font-bold text-lg group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors">
-                      {project.title}
-                    </h3>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="text-slate-900 dark:text-white font-bold text-lg group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors">
+                        {project.title}
+                      </h3>
+                      {project.badge && (
+                        <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800/50 text-amber-600 dark:text-amber-400">
+                          {project.badge}
+                        </span>
+                      )}
+                    </div>
                     <p className="text-slate-500 dark:text-slate-400 text-sm">
                       {project.subtitle}
                     </p>
@@ -97,16 +104,55 @@ export function Projects() {
                           </li>
                         ))}
                       </ul>
-                      <div className="flex flex-wrap gap-2">
-                        {project.tags.map((tag) => (
-                          <span
-                            key={tag}
-                            className="px-2.5 py-1 text-xs font-medium rounded-lg bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/60 text-slate-600 dark:text-slate-400"
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div className="flex flex-wrap gap-2">
+                          {project.tags.map((tag) => (
+                            <span
+                              key={tag}
+                              className="px-2.5 py-1 text-xs font-medium rounded-lg bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/60 text-slate-600 dark:text-slate-400"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                        {project.link && (
+                          <a
+                            href={project.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800/50 text-indigo-600 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors shrink-0"
                           >
-                            {tag}
-                          </span>
-                        ))}
+                            <ExternalLink size={11} />
+                            {project.linkLabel ?? "Live Site"}
+                          </a>
+                        )}
                       </div>
+                      {project.sources && project.sources.length > 0 && (
+                        <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800/60">
+                          <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2">
+                            Sources
+                          </p>
+                          <ul className="space-y-1">
+                            {project.sources.map((src) => (
+                              <li key={src.url}>
+                                <a
+                                  href={src.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="flex items-center gap-1.5 text-[11px] text-slate-400 dark:text-slate-500 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors group/src"
+                                >
+                                  <ExternalLink size={9} className="shrink-0" />
+                                  <span className="underline underline-offset-2 decoration-slate-300 dark:decoration-slate-700 group-hover/src:decoration-indigo-400">
+                                    {src.label}
+                                  </span>
+                                </a>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
                     </div>
                   </motion.div>
                 )}

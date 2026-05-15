@@ -12,6 +12,10 @@ export interface Project {
   description: string;
   bullets: string[];
   tags: string[];
+  link?: string;
+  linkLabel?: string;
+  badge?: string;
+  sources?: Array<{ label: string; url: string }>;
 }
 
 export interface Skill {

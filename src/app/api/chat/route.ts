@@ -87,6 +87,180 @@ github: https://github.com/Anuvratjoshi/error-intelligence-layer
 CLI tool + Node.js library that parses backend TypeScript with ts-morph, strips backend-only constructs, and emits clean frontend types. Eliminates type duplication and frontend/backend contract drift.
 npm: https://www.npmjs.com/package/@joshianuvrat/type-bridge
 
+## STARTUP — RENTEASE
+
+> This is Anuvrat's side hustle startup. Be prepared to answer ANY question about it — from a curious developer to a Shark Tank investor. Every claim below is source-backed and precise.
+
+---
+
+### ELEVATOR PITCH (30 seconds)
+"India has a ₹2L+ crore rental housing market, yet 95% of landlords still manage it on WhatsApp and notebooks. RentEase is a mobile-first SaaS operating system for independent Indian landlords — built for the uncle who owns 3 flats, not the enterprise managing 3,000. Simple workflows, no clutter, and a sticky monthly loop that keeps landlords coming back every single rent cycle."
+
+---
+
+### THE PROBLEM — SOURCE-BACKED
+
+**Scale of the market:**
+- Knight Frank (2019) estimates India's rental housing market at **$20B–$34B+** (₹1.6L–₹2.8L crore), with strong growth projected through 2030.
+- TechSci Research projects continued expansion driven by: rapid urbanisation, IT sector workforce mobility, migrant workers, students, and the growing unaffordability of home ownership.
+- India adds approximately **10 million urban migrants per year**, most of whom become renters.
+
+**The disorganisation problem:**
+- ET Edge Insights reports approximately **95% of India's rental inventory remains unorganised** — landlords managing via WhatsApp chats, physical notebooks, Excel sheets, scattered PDFs, and phone call reminders.
+- Most landlords have no digital record of: payment history, agreement expiry dates, security deposits, maintenance requests, or tenant documents.
+- This isn't a supply problem — it's a **standardisation and operations problem**.
+
+**Why it hasn't been solved:**
+- Existing platforms (NoBroker, NestAway, OYO Life, Stanza Living, Zolo) focus on **brokerage, co-living, or marketplace aggregation** — not the landlord's daily operational workflow.
+- The few property management tools that exist (MagicBricks, Housing.com) are either listing-focused or too enterprise-heavy for small landlords.
+- Western SaaS tools (Buildium, AppFolio) are built for US market patterns and are completely misaligned with Indian behavior and pricing.
+
+---
+
+### TARGET CUSTOMER (ICP — Ideal Customer Profile)
+
+**Primary:** Independent Indian landlords managing 1–20 rental units
+- Small property owners: own 1–3 flats, typically rented out for passive income
+- Family property holders: inherited or built properties, managed informally
+- PG (Paying Guest) operators: managing 5–20 beds in tier-1/2 cities
+- Semi-professional landlords: managing 5–20 units, want organisation but not enterprise software
+
+**Secondary:** Tenants who want payment receipts, maintenance tracking, and transparency
+
+**Persona example:** A retired government employee in Pune who owns 4 flats. Currently tracks rent in a register. Misses agreement renewals. Can't remember who paid last month without calling. Wants something simple on his phone. Will pay ₹299/month if it saves him 2 hours of headache.
+
+---
+
+### PRODUCT — WHAT RENTEASE DOES
+
+**Core modules (built/in progress):**
+1. **Tenant Management** — Add, edit, remove tenants with full profile (ID, documents, emergency contact)
+2. **Rent Tracking** — Log monthly rent payments, mark paid/unpaid, view history per tenant
+3. **Payment Reminders** — Automated WhatsApp/SMS/email reminders before due date
+4. **Agreement Management** — Upload, store, set expiry alerts for rental agreements
+5. **Maintenance Requests** — Tenants raise requests, landlords track and close them
+6. **Document Storage** — Centralized storage for IDs, agreements, utility bills
+7. **Dashboard** — Single-screen view of: pending rents, expiring agreements, open maintenance
+8. **Multi-property support** — Manage multiple properties from one account
+
+**Design philosophy:**
+- Mobile-first (landlords in India primarily use smartphones, not desktops)
+- Large tap targets, clear language, minimal navigation depth
+- "Simple enough that an Indian uncle can use it without a tutorial"
+- No enterprise jargon, no overwhelming dashboards
+
+---
+
+### COMPETITIVE ANALYSIS
+
+| Player | Focus | Gap |
+|---|---|---|
+| NoBroker | Broker elimination, listings | No landlord operations tool |
+| NestAway | Managed housing | Institutional, not independent landlords |
+| OYO Life | Co-living | Different segment entirely |
+| Stanza Living | Student co-living | Different segment entirely |
+| MagicBricks / Housing.com | Property listings | Not operational software |
+| Buildium / AppFolio | US property management SaaS | Wrong market, wrong pricing, wrong UX |
+| **RentEase** | **Landlord operations SaaS** | **Fills the gap** |
+
+**RentEase's real differentiator:** No one is building a clean, focused, India-first operational tool for independent landlords. Everyone is chasing the marketplace/broker model because it's more obvious. RentEase bets on the operational layer — which is less visible but more sticky.
+
+---
+
+### BUSINESS MODEL
+
+**Freemium SaaS:**
+- **Free tier:** Up to 2 properties, basic rent tracking, limited reminders
+- **Pro tier (₹299/month or ₹2,499/year):** Unlimited properties, all reminders, document storage, agreement alerts
+- **Business tier (₹799/month):** Multiple users/agents, advanced analytics, bulk operations, API access
+
+**Why this pricing works:**
+- ₹299/month = ₹10/day. A landlord earning ₹20,000/month in rent will pay this if it saves them even one missed payment or one missed renewal.
+- Annual plan creates upfront cash flow and reduces churn.
+- Freemium creates viral growth — tenants see the platform, some become landlords later.
+
+**Revenue potential (conservative):**
+- India has an estimated **15–20 million independent landlords** in urban areas.
+- Even 0.1% conversion at Pro tier = 15,000–20,000 paying users.
+- At ₹299/month average = **₹4.5–6 crore ARR** at 0.1% penetration.
+- Scale to 1% penetration = ₹45–60 crore ARR.
+
+---
+
+### GO-TO-MARKET STRATEGY
+
+**Phase 1 — Organic / community (current):**
+- Product Hunt launch
+- Housing society WhatsApp groups
+- Reddit India real estate communities
+- Direct outreach to PG operators in Tier-1 cities
+
+**Phase 2 — Referral + word of mouth:**
+- Tenant referral: tenants invite landlords (to get digital rent receipts)
+- Landlord referral: invite other property owners, get free months
+- Housing society tie-ups: bulk onboard entire societies
+
+**Phase 3 — Partnerships:**
+- Integration with UPI payment providers (PhonePe, GPay, Paytm)
+- Tie-up with property registration offices, housing societies
+- CA/tax consultant referral network (landlords need ITR support)
+
+---
+
+### MOAT & RETENTION
+
+**Data lock-in:** Once a landlord has 2+ years of rent history, tenant records, and scanned agreements in RentEase — migrating is painful. This is intentional.
+
+**Recurring loop:** Rent is monthly. Agreements renew yearly. Maintenance is constant. The app is opened every single month by design.
+
+**Network effect (long-term):** When tenants also use the platform to track payments and raise requests, the landlord can't leave without disrupting tenant communication.
+
+---
+
+### TECH STACK
+
+- **Frontend:** Next.js, React.js, TypeScript, Tailwind CSS (live at rent-ease-client-beta.vercel.app)
+- **Backend:** Node.js, Express.js (in development)
+- **Database:** MongoDB
+- **Realtime:** Socket.io (for maintenance request status updates)
+- **Payments:** Stripe / Razorpay integration (planned)
+- **Infrastructure:** Docker, Azure (planned)
+- **Auth:** JWT + refresh token rotation
+
+---
+
+### TRACTION & STATUS
+
+- **Frontend MVP:** Live and deployed at https://rent-ease-client-beta.vercel.app/
+- **Backend:** In active development as a side project
+- **Built by:** Anuvrat Joshi, solo — alongside a full-time Senior Full Stack Developer role
+- **Stage:** Pre-revenue, pre-seed concept with working frontend
+- **Looking for:** Co-founders, early beta users, angel investors, or feedback from the ecosystem
+
+---
+
+### THE FOUNDER'S EDGE
+
+Anuvrat isn't building this from a whiteboard. He:
+- Has 3+ years of production MERN stack experience at enterprise scale
+- Has built high-concurrency systems (TARDIS, DIIBS) with real operational complexity
+- Understands SaaS architecture, payment integrations, real-time systems, and mobile-first UX
+- Is building the backend with the same engineering rigour he applies at his day job
+- Identified this gap from first principles, not from copying a trend
+
+---
+
+### KEY STATS TO CITE
+
+- **95%** of India's rental inventory is unorganised (ET Edge Insights)
+- **$20B–$34B+** estimated market size (Knight Frank, 2019)
+- **10 million** urban migrants added per year in India
+- **15–20 million** estimated independent landlords in urban India
+- **₹299/month** target Pro tier price point
+- Growth projected through **2030** (TechSci Research)
+- Competitors focus on listings/co-living — **zero** clean operational SaaS for independent landlords
+
+
 ## EDUCATION
 - B.Tech in Mechanical Engineering — THDC Institute of Hydropower Engineering & Technology
 - Full Stack Bootcamp — 10X Academy

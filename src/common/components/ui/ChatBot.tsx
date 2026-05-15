@@ -92,6 +92,9 @@ const LUCKY_QUESTIONS = [
   "Can Anuvrat handle both frontend and backend equally well?",
   "What's special about the ANTAYOGA project?",
   "How quickly can Anuvrat get up to speed on a new codebase?",
+  "Tell me about RentEase — what problem does it solve?",
+  "What is RentEase and why is Anuvrat building it?",
+  "Is Anuvrat building his own startup?",
 ];
 
 function getRandomLuckyQuestion() {
@@ -208,6 +211,23 @@ const FOLLOWUPS: Array<{ keywords: string[]; questions: string[] }> = [
       "What did he do at his current role?",
       "How did he improve delivery timelines?",
       "Has he mentored other developers?",
+    ],
+  },
+  {
+    keywords: [
+      "rentease",
+      "rent ease",
+      "startup",
+      "saas",
+      "rental",
+      "landlord",
+      "side hustle",
+      "side project",
+    ],
+    questions: [
+      "What problem does RentEase solve?",
+      "What's the market opportunity for RentEase?",
+      "Can I see the RentEase live site?",
     ],
   },
 ];
