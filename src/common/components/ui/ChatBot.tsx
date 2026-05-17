@@ -793,7 +793,7 @@ export function ChatBot() {
         ]);
 
         // Typewriter engine
-        const CHAR_DELAY = 18;
+        const CHAR_DELAY = 28;
         const charQueue: string[] = [];
         let displayed = "";
         let streamDone = false;
@@ -811,7 +811,7 @@ export function ChatBot() {
             }
             return;
           }
-          const batch = charQueue.splice(0, 3).join("");
+          const batch = charQueue.splice(0, 1).join("");
           displayed += batch;
           const snap = displayed;
           setMessages((prev) =>

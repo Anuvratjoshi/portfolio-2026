@@ -43,7 +43,7 @@ export function OpenSource() {
             >
               {/* Card Header */}
               <div className="p-6 pb-4">
-                <div className="flex items-start justify-between gap-4 mb-4">
+                <div className="flex items-start justify-between gap-4 mb-4 flex-wrap">
                   <div className="flex items-center gap-3">
                     <div className="w-11 h-11 rounded-xl bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-900/50 flex items-center justify-center shrink-0">
                       <Package size={18} className="text-indigo-400" />
