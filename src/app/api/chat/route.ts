@@ -312,6 +312,12 @@ Mix and vary these styles. Never repeat the same format twice in a row. Always e
 - "Anyway. Want to know about a developer who wouldn't waste your time like this?"
 - "Redirecting you to something actually worth your attention: Anuvrat's work."
 
+### RESPONSE LENGTH:
+- First message in a session: up to 5–6 sentences if needed to give a solid intro.
+- Follow-up messages in an ongoing conversation: be tighter — 3–4 sentences is ideal. Skip re-explaining what's already been covered.
+- Never pad responses with filler. If the answer is short, keep it short.
+- Exception: if the user explicitly asks for a detailed breakdown, a list, or a deep dive — then expand.
+
 ### TONE:
 - Confident, witty, sharp, unpredictable
 - Never robotic or generic — every roast should feel fresh
@@ -397,19 +403,99 @@ export async function POST(req: NextRequest) {
       console.warn("[/api/chat] MongoDB load failed:", dbErr);
     }
 
-    // ── Build Groq messages (cap last 15 exchanges = 30 turns) ────────────
-    const recentHistory = history.slice(-15);
-    const groqMessages: Array<{
-      role: "system" | "user" | "assistant";
-      content: string;
-    }> = [
+    // ── Build Groq messages (cap last 10 exchanges = 20 turns) ────────────
+    const recentHistory = history.slice(-10);
+    type GroqMsg = { role: "system" | "user" | "assistant"; content: string };
+    const groqMessages: GroqMsg[] = [
       { role: "system", content: SYSTEM_PROMPT },
-      ...recentHistory.flatMap((entry) => [
-        { role: "user" as const, content: entry.user },
-        { role: "assistant" as const, content: entry.assistant },
+      ...recentHistory.flatMap((entry): GroqMsg[] => [
+        { role: "user", content: entry.user },
+        { role: "assistant", content: entry.assistant },
       ]),
-      { role: "user", content: cleanMessage },
     ];
+
+    // ── Inject continuity context note when conversation is ongoing ────────
+    // This tells the AI to be precise rather than re-explaining from scratch.
+    if (recentHistory.length > 0) {
+      const coveredTopics = recentHistory
+        .slice(-5)
+        .map((e) => e.user.slice(0, 120))
+        .join(" | ");
+      groqMessages.push({
+        role: "system",
+        content:
+          `ONGOING CONVERSATION — PRECISION MODE: This user has an active session. ` +
+          `Recent questions covered: "${coveredTopics}". ` +
+          `If the new question relates to anything already discussed, use that context to give a sharper, ` +
+          `more targeted answer — skip re-explaining what's already been established. ` +
+          `If it's a new topic, answer fresh but concisely. ` +
+          `Target 80–150 words. Never pad with filler sentences.`,
+      });
+    }
+
+    // ── Intent-aware focus hint (always injected) ─────────────────────────
+    // Classifies the current message and pins the AI on the most relevant
+    // part of its knowledge base, cutting down generic padding.
+    {
+      const lower = cleanMessage.toLowerCase();
+      let focusHint = "";
+
+      if (
+        /\bhir(e|ing)\b|available|open to|job|role|opportunit|salary|notice|interview|remote|relocat/.test(
+          lower,
+        )
+      ) {
+        focusHint =
+          "INTENT: HIRING INQUIRY. Directly address availability, stack match, notice period, and how to reach Anuvrat. Keep it punchy — recruiters are busy.";
+      } else if (
+        /tardis|diibs|antayoga|project|built|platform|system/.test(lower)
+      ) {
+        focusHint =
+          "INTENT: PROJECT DEEP-DIVE. Give technical specifics — architecture decisions, challenges overcome, metrics. Avoid surface-level descriptions.";
+      } else if (
+        /rentease|rent ease|rent-ease|startup|landlord|tenant|saas|rental market/.test(
+          lower,
+        )
+      ) {
+        focusHint =
+          "INTENT: RENTEASE / STARTUP. Channel Shark Tank energy — market size, problem, solution, traction, moat. Be crisp and confident.";
+      } else if (
+        /npm|package|error.intelligence|type.bridge|open.?source|library/.test(
+          lower,
+        )
+      ) {
+        focusHint =
+          "INTENT: NPM / OPEN SOURCE. Explain the real problem solved, the technical elegance, and why it matters to other developers.";
+      } else if (
+        /ai|copilot|cursor|claude|groq|llm|prompt|workflow/.test(lower)
+      ) {
+        focusHint =
+          "INTENT: AI WORKFLOW. Be specific — which tools, for what tasks, how it changed velocity. Show not tell.";
+      } else if (
+        /skill|stack|tech|typescript|react|node|mongodb|backend|frontend|database|language|framework/.test(
+          lower,
+        )
+      ) {
+        focusHint =
+          "INTENT: SKILLS. Give examples from real projects, not just a list. One concrete example per skill beats three vague claims.";
+      } else if (
+        /experience|year|company|incipient|acs|career|mentor|senior|deliver/.test(
+          lower,
+        )
+      ) {
+        focusHint =
+          "INTENT: EXPERIENCE / CAREER. Lead with impact metrics. 20% faster delivery, 30% latency reduction — make numbers do the work.";
+      } else if (/contact|email|linkedin|github|reach|connect/.test(lower)) {
+        focusHint =
+          "INTENT: CONTACT. Give all the links directly and immediately. Don't bury them in prose.";
+      }
+
+      if (focusHint) {
+        groqMessages.push({ role: "system", content: focusHint });
+      }
+    }
+
+    groqMessages.push({ role: "user", content: cleanMessage });
 
     // ── Save question to analytics (fire-and-forget) ──────────────────────
     if (db) {
@@ -423,60 +509,67 @@ export async function POST(req: NextRequest) {
         .catch(() => {});
     }
 
-    // ── Collect full Groq response (buffer before streaming to client) ─────
+    // ── Start Groq stream ─────────────────────────────────────────────────
     const groqStream = await groq.chat.completions.create({
       model: "llama-3.3-70b-versatile",
       messages: groqMessages,
-      max_tokens: 500,
+      max_tokens: recentHistory.length > 0 ? 380 : 500,
       temperature: 0.8,
       stream: true,
     });
 
-    let fullResponse = "";
-    for await (const chunk of groqStream) {
-      fullResponse += chunk.choices[0]?.delta?.content ?? "";
-    }
-
-    // ── Persist the exchange to MongoDB (upsert session) ──────────────────
-    if (db) {
-      const newEntry: ChatExchange = {
-        id: crypto.randomUUID(),
-        user: cleanMessage,
-        assistant: fullResponse,
-        timestamp: new Date(),
-      };
-      db.collection("chat_sessions")
-        .updateOne(
-          { sessionId: cleanSessionId },
-          {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            $push: { conversation: newEntry } as any,
-            $set: { updatedAt: new Date() },
-            $setOnInsert: {
-              sessionId: cleanSessionId,
-              visitorId: cleanVisitorId,
-              createdAt: new Date(),
-            },
-          },
-          { upsert: true },
-        )
-        .catch((err) => console.warn("[/api/chat] MongoDB save failed:", err));
-    }
-
-    // ── Stream the buffered response to client ────────────────────────────
+    // ── True streaming: pipe Groq tokens directly to browser ─────────────
+    // Accumulate the full response in-closure so we can persist after done.
     const encoder = new TextEncoder();
     const readable = new ReadableStream({
-      start(controller) {
-        controller.enqueue(encoder.encode(fullResponse));
-        controller.close();
+      async start(controller) {
+        let fullResponse = "";
+        try {
+          for await (const chunk of groqStream) {
+            const text = chunk.choices[0]?.delta?.content ?? "";
+            if (text) {
+              fullResponse += text;
+              controller.enqueue(encoder.encode(text));
+            }
+          }
+        } finally {
+          controller.close();
+          // ── Persist exchange after stream completes (fire-and-forget) ──
+          if (db && fullResponse) {
+            const newEntry: ChatExchange = {
+              id: crypto.randomUUID(),
+              user: cleanMessage,
+              assistant: fullResponse,
+              timestamp: new Date(),
+            };
+            db.collection("chat_sessions")
+              .updateOne(
+                { sessionId: cleanSessionId },
+                {
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  $push: { conversation: newEntry } as any,
+                  $set: { updatedAt: new Date() },
+                  $setOnInsert: {
+                    sessionId: cleanSessionId,
+                    visitorId: cleanVisitorId,
+                    createdAt: new Date(),
+                  },
+                },
+                { upsert: true },
+              )
+              .catch((err) =>
+                console.warn("[/api/chat] MongoDB save failed:", err),
+              );
+          }
+        }
       },
     });
 
     return new Response(readable, {
       headers: {
         "Content-Type": "text/plain; charset=utf-8",
-        "Transfer-Encoding": "chunked",
         "X-Content-Type-Options": "nosniff",
+        "Cache-Control": "no-cache",
       },
     });
   } catch (err: unknown) {
