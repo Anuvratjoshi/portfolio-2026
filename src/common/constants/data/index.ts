@@ -41,7 +41,7 @@ export const SKILLS: Skill[] = [
   },
   {
     category: "Databases",
-    items: ["MongoDB", "Mongoose ORM", "Cosmos DB", "SQL"],
+    items: ["MongoDB", "Mongoose ORM", "Cosmos DB", "SQL", "Redis"],
   },
   {
     category: "Tools & DevOps",
@@ -50,6 +50,8 @@ export const SKILLS: Skill[] = [
       "GitHub",
       "Azure Blob Storage",
       "Azure Event Grid",
+      "Docker",
+      "Azure Logic Apps",
       "Postman",
       "Agile/Scrum",
       "Bruno",

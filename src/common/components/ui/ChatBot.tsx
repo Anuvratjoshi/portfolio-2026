@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback, memo, useMemo } from "react";
+import { useState, useRef, useEffect, useCallback, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
@@ -99,148 +99,6 @@ const LUCKY_QUESTIONS = [
 
 function getRandomLuckyQuestion() {
   return LUCKY_QUESTIONS[Math.floor(Math.random() * LUCKY_QUESTIONS.length)];
-}
-
-// ─── Follow-up chip engine ────────────────────────────────────────────────────
-
-const FOLLOWUPS: Array<{ keywords: string[]; questions: string[] }> = [
-  {
-    keywords: [
-      "tardis",
-      "pipeline",
-      "servicenow",
-      "cron",
-      "azure",
-      "ingestion",
-    ],
-    questions: [
-      "How did he handle high data volumes?",
-      "What was the RBAC setup like?",
-      "How did caching help performance?",
-    ],
-  },
-  {
-    keywords: ["diibs", "auction", "bidding", "redux", "concurrency"],
-    questions: [
-      "How did he prevent race conditions?",
-      "What was the role-based UI like?",
-      "How was real-time state managed?",
-    ],
-  },
-  {
-    keywords: [
-      "antayoga",
-      "mental health",
-      "conditional",
-      "scoring",
-      "assessment",
-    ],
-    questions: [
-      "How did the branching logic work?",
-      "What privacy measures were in place?",
-      "How did he improve user retention?",
-    ],
-  },
-  {
-    keywords: [
-      "npm",
-      "error-intelligence",
-      "type-bridge",
-      "package",
-      "library",
-    ],
-    questions: [
-      "How does error-intelligence-layer work?",
-      "What problem does type-bridge solve?",
-      "Are these packages production-ready?",
-    ],
-  },
-  {
-    keywords: [
-      "skill",
-      "stack",
-      "technology",
-      "tech",
-      "language",
-      "framework",
-      "typescript",
-      "react",
-      "node",
-    ],
-    questions: [
-      "Which skill is his strongest?",
-      "Does he know GraphQL?",
-      "What databases has he worked with?",
-    ],
-  },
-  {
-    keywords: [
-      "ai",
-      "copilot",
-      "groq",
-      "claude",
-      "cursor",
-      "workflow",
-      "prompt",
-    ],
-    questions: [
-      "How does he use AI in daily dev?",
-      "Does he use AI for code reviews?",
-      "What's his prompt engineering approach?",
-    ],
-  },
-  {
-    keywords: [
-      "hire",
-      "available",
-      "job",
-      "opportunity",
-      "work",
-      "salary",
-      "contact",
-    ],
-    questions: [
-      "How can I contact Anuvrat?",
-      "Is he open to remote work?",
-      "What roles is he looking for?",
-    ],
-  },
-  {
-    keywords: ["experience", "year", "company", "incipient", "acs", "senior"],
-    questions: [
-      "What did he do at his current role?",
-      "How did he improve delivery timelines?",
-      "Has he mentored other developers?",
-    ],
-  },
-  {
-    keywords: [
-      "rentease",
-      "rent ease",
-      "startup",
-      "saas",
-      "rental",
-      "landlord",
-      "side hustle",
-      "side project",
-    ],
-    questions: [
-      "What problem does RentEase solve?",
-      "What's the market opportunity for RentEase?",
-      "Can I see the RentEase live site?",
-    ],
-  },
-];
-
-function getFollowUps(content: string): string[] {
-  const lower = content.toLowerCase();
-  for (const entry of FOLLOWUPS) {
-    if (entry.keywords.some((kw) => lower.includes(kw))) {
-      const shuffled = [...entry.questions].sort(() => Math.random() - 0.5);
-      return shuffled.slice(0, 2);
-    }
-  }
-  return ["What else can you tell me?", "Is he available for hire?"];
 }
 
 // ─── localStorage helpers ─────────────────────────────────────────────────────
@@ -644,6 +502,9 @@ export function ChatBot() {
   const [unread, setUnread] = useState(0);
   const [hydrated, setHydrated] = useState(false);
   const [showHint, setShowHint] = useState(false);
+  const [msgFollowUps, setMsgFollowUps] = useState<Record<string, string[]>>(
+    {},
+  );
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -808,6 +669,30 @@ export function ChatBot() {
                 ),
               );
               if (!open) setUnread((n) => n + 1);
+              // Fetch unseen follow-up questions from server
+              const sid = localStorage.getItem(SESSION_ID_KEY) ?? "";
+              fetch("/api/chat/followups", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  sessionId: sid,
+                  responseText: displayed.slice(0, 800),
+                }),
+              })
+                .then((r) => (r.ok ? r.json() : null))
+                .then(
+                  (
+                    data: { questions: { id: string; text: string }[] } | null,
+                  ) => {
+                    if (data?.questions?.length) {
+                      setMsgFollowUps((prev) => ({
+                        ...prev,
+                        [assistantId]: data.questions.map((q) => q.text),
+                      }));
+                    }
+                  },
+                )
+                .catch(() => {});
             }
             return;
           }
@@ -875,12 +760,6 @@ export function ChatBot() {
   const lastBotMsg = [...messages]
     .reverse()
     .find((m) => m.role === "assistant" && !m.streaming);
-  const followUps = useMemo(
-    () =>
-      lastBotMsg && messages.length > 1 ? getFollowUps(lastBotMsg.content) : [],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [lastBotMsg?.id],
-  );
   const charCount = input.length;
 
   return (
@@ -1118,7 +997,9 @@ export function ChatBot() {
                           key={msg.id}
                           msg={msg}
                           onReact={handleReact}
-                          followUps={isLastBot ? followUps : []}
+                          followUps={
+                            isLastBot ? (msgFollowUps[msg.id] ?? []) : []
+                          }
                           onFollowUp={sendMessage}
                           isLast={isLastBot}
                         />

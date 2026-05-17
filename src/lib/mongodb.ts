@@ -172,6 +172,18 @@ async function ensureCollections(db: Db): Promise<void> {
       },
     );
     console.log(`${tag2} ✓ Collection 'chat_sessions' ready (TTL: 7 days).`);
+
+    // ── followup_questions collection ─────────────────────────────────────
+    const fq = db.collection("followup_questions");
+    await fq.createIndex(
+      { text: 1 },
+      { name: "text_unique", unique: true, background: true },
+    );
+    await fq.createIndex({ category: 1 }, { background: true });
+    const fqCount = await fq.countDocuments();
+    console.log(
+      `${tag2} ✓ Collection 'followup_questions' ready (${fqCount} questions).`,
+    );
   } catch (err) {
     // Non-fatal — app still works, just log it
     console.warn(
