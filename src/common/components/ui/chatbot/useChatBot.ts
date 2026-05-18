@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import type { Message, View } from "./types";
 import {
   LS_KEY,
@@ -28,6 +28,21 @@ export function useChatBot() {
   const [isAtBottom, setIsAtBottom] = useState(true);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchMatchIndex, setSearchMatchIndex] = useState(-1);
+
+  // ─── Search matches ──────────────────────────────────────────────────────
+  const searchMatches = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    const q = searchQuery.toLowerCase();
+    return messages
+      .filter((m) => m.content.toLowerCase().includes(q))
+      .map((m) => m.id);
+  }, [messages, searchQuery]);
+
+  // Reset match index when query changes
+  useEffect(() => {
+    setSearchMatchIndex(-1);
+  }, [searchQuery]);
 
   // ─── Refs ──────────────────────────────────────────────────────────────────
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -130,6 +145,16 @@ export function useChatBot() {
     setIsAtBottom(true);
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
+
+  // ─── Search navigation ─────────────────────────────────────────────────────
+  const navigateSearchMatch = useCallback(() => {
+    if (searchMatches.length === 0) return;
+    const nextIndex = (searchMatchIndex + 1) % searchMatches.length;
+    setSearchMatchIndex(nextIndex);
+    const id = searchMatches[nextIndex];
+    const el = document.getElementById(`msg-${id}`);
+    el?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [searchMatches, searchMatchIndex]);
 
   // ─── Reactions ─────────────────────────────────────────────────────────────
   const handleReact = useCallback((id: string, reaction: "up" | "down") => {
@@ -449,6 +474,9 @@ export function useChatBot() {
     setIsSearchOpen,
     searchQuery,
     setSearchQuery,
+    searchMatches,
+    searchMatchIndex,
+    navigateSearchMatch,
     // Refs
     bottomRef,
     inputRef,

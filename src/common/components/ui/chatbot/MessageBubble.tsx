@@ -12,7 +12,7 @@ import {
   Bookmark,
   BookmarkCheck,
 } from "lucide-react";
-import { MarkdownRenderer } from "./MarkdownRenderer";
+import { MarkdownRenderer, highlightText } from "./MarkdownRenderer";
 import { formatTime } from "./storage";
 import { toast } from "./Toast";
 import type { Message } from "./types";
@@ -65,6 +65,8 @@ export interface MessageBubbleProps {
   onRetry: (id: string, failedInput: string) => void;
   /** When set, dims this bubble if content doesn't match */
   searchQuery?: string;
+  /** Highlight this bubble as the currently focused search result */
+  isActiveMatch?: boolean;
 }
 
 export const MessageBubble = memo(function MessageBubble({
@@ -76,6 +78,7 @@ export const MessageBubble = memo(function MessageBubble({
   isLast,
   onRetry,
   searchQuery,
+  isActiveMatch,
 }: MessageBubbleProps) {
   const isUser = msg.role === "user";
 
@@ -86,13 +89,14 @@ export const MessageBubble = memo(function MessageBubble({
 
   return (
     <motion.div
+      id={`msg-${msg.id}`}
       initial={{ opacity: 0, y: 8, scale: 0.97 }}
       animate={{ opacity: dimmed ? 0.25 : 1, y: 0, scale: 1 }}
       transition={{
         duration: 0.2,
         layout: { duration: 0.18, ease: "easeOut" },
       }}
-      className={`flex flex-col ${isUser ? "items-end" : "items-start"} mb-4 group`}
+      className={`flex flex-col ${isUser ? "items-end" : "items-start"} mb-4 group${isActiveMatch ? " scroll-mt-4" : ""}`}
     >
       <div
         className={`flex ${isUser ? "justify-end" : "justify-start"} w-full`}
@@ -107,15 +111,20 @@ export const MessageBubble = memo(function MessageBubble({
             className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed transition-colors ${
               isUser
                 ? "bg-indigo-600 text-white rounded-br-sm whitespace-pre-wrap wrap-break-word"
-                : `bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-bl-sm ${msg.bookmarked ? "ring-1 ring-amber-400/50 dark:ring-amber-500/40" : ""}`
+                : `bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-bl-sm ${msg.bookmarked ? "ring-1 ring-amber-400/50 dark:ring-amber-500/40" : ""}${isActiveMatch ? " ring-2 ring-indigo-400 dark:ring-indigo-500" : ""}`
             }`}
           >
             {isUser ? (
-              msg.content
+              searchQuery ? (
+                highlightText(msg.content, searchQuery, `um-${msg.id}`)
+              ) : (
+                msg.content
+              )
             ) : (
               <MarkdownRenderer
                 content={msg.content}
                 streaming={msg.streaming}
+                searchQuery={searchQuery}
               />
             )}
           </div>

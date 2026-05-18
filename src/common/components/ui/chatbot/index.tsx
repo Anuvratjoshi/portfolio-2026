@@ -29,6 +29,9 @@ export function ChatBot() {
     setIsSearchOpen,
     searchQuery,
     setSearchQuery,
+    searchMatches,
+    searchMatchIndex,
+    navigateSearchMatch,
     bottomRef,
     inputRef,
     scrollContainerRef,
@@ -256,11 +259,19 @@ export function ChatBot() {
                     msgFollowUps={msgFollowUps}
                     searchQuery={searchQuery}
                     isSearchOpen={isSearchOpen}
+                    searchMatchIndex={searchMatchIndex}
+                    searchMatchCount={searchMatches.length}
+                    activeMatchId={
+                      searchMatchIndex >= 0
+                        ? searchMatches[searchMatchIndex]
+                        : undefined
+                    }
                     onSearchChange={setSearchQuery}
                     onCloseSearch={() => {
                       setIsSearchOpen(false);
                       setSearchQuery("");
                     }}
+                    onSearchNavigate={navigateSearchMatch}
                     onReact={handleReact}
                     onBookmark={handleBookmark}
                     onFollowUp={sendMessage}

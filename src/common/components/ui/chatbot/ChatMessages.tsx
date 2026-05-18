@@ -16,8 +16,12 @@ interface ChatMessagesProps {
   msgFollowUps: Record<string, string[]>;
   searchQuery: string;
   isSearchOpen: boolean;
+  searchMatchIndex: number;
+  searchMatchCount: number;
+  activeMatchId: string | undefined;
   onSearchChange: (q: string) => void;
   onCloseSearch: () => void;
+  onSearchNavigate: () => void;
   onReact: (id: string, r: "up" | "down") => void;
   onBookmark: (id: string) => void;
   onFollowUp: (q: string) => void;
@@ -37,8 +41,12 @@ export const ChatMessages = forwardRef<HTMLDivElement, ChatMessagesProps>(
       msgFollowUps,
       searchQuery,
       isSearchOpen,
+      searchMatchIndex,
+      searchMatchCount,
+      activeMatchId,
       onSearchChange,
       onCloseSearch,
+      onSearchNavigate,
       onReact,
       onBookmark,
       onFollowUp,
@@ -73,9 +81,27 @@ export const ChatMessages = forwardRef<HTMLDivElement, ChatMessagesProps>(
                   autoFocus
                   value={searchQuery}
                   onChange={(e) => onSearchChange(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      onSearchNavigate();
+                    }
+                  }}
                   placeholder="Search messages…"
                   className="flex-1 text-xs bg-transparent text-slate-700 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none"
                 />
+                {searchQuery && searchMatchCount > 0 && (
+                  <span className="text-[10px] text-slate-400 dark:text-slate-500 shrink-0 tabular-nums select-none">
+                    {searchMatchIndex >= 0
+                      ? `${searchMatchIndex + 1} / ${searchMatchCount}`
+                      : searchMatchCount}
+                  </span>
+                )}
+                {searchQuery && searchMatchCount === 0 && (
+                  <span className="text-[10px] text-red-400 dark:text-red-500 shrink-0 select-none">
+                    No results
+                  </span>
+                )}
                 {searchQuery && (
                   <button
                     onClick={() => onSearchChange("")}
@@ -151,6 +177,7 @@ export const ChatMessages = forwardRef<HTMLDivElement, ChatMessagesProps>(
                 isLast={isLastBot}
                 onRetry={onRetry}
                 searchQuery={isSearchOpen ? searchQuery : ""}
+                isActiveMatch={activeMatchId === msg.id}
               />
             );
           })}

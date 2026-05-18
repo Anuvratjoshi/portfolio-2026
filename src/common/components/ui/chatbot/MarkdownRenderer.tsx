@@ -36,8 +36,44 @@ function CodeBlock({ code }: { code: string }) {
   );
 }
 
+// ─── Search highlight helper ─────────────────────────────────────────────────
+export function highlightText(
+  text: string,
+  query: string,
+  keyPrefix = "hl",
+): ReactNode {
+  if (!query || !text) return text;
+  const q = query.toLowerCase();
+  const result: ReactNode[] = [];
+  let remaining = text;
+  let keyIdx = 0;
+  let idx: number;
+  while ((idx = remaining.toLowerCase().indexOf(q)) !== -1) {
+    if (idx > 0) result.push(remaining.slice(0, idx));
+    result.push(
+      <mark
+        key={`${keyPrefix}-${keyIdx++}`}
+        className="bg-amber-200 dark:bg-amber-400/30 text-inherit rounded-[3px] not-italic font-[inherit]"
+      >
+        {remaining.slice(idx, idx + query.length)}
+      </mark>,
+    );
+    remaining = remaining.slice(idx + query.length);
+  }
+  if (remaining) result.push(remaining);
+  if (result.length === 0) return text;
+  if (result.length === 1) return result[0];
+  return <>{result}</>;
+}
+
 // ─── Inline formatting ────────────────────────────────────────────────────────
-export function renderInline(text: string, prefix = "il"): ReactNode {
+export function renderInline(
+  text: string,
+  prefix = "il",
+  searchQuery = "",
+): ReactNode {
+  const hl = (t: string, p: string): ReactNode =>
+    searchQuery ? highlightText(t, searchQuery, p) : t;
   const nodes: ReactNode[] = [];
   const PATTERN =
     /(\[([^\]]+)\]\(([^)]+)\)|\*\*\*(.+?)\*\*\*|\*\*(.+?)\*\*|\*(.+?)\*|`([^`]+)`)/g;
@@ -45,7 +81,8 @@ export function renderInline(text: string, prefix = "il"): ReactNode {
   let m: RegExpExecArray | null;
   let i = 0;
   while ((m = PATTERN.exec(text)) !== null) {
-    if (m.index > last) nodes.push(text.slice(last, m.index));
+    if (m.index > last)
+      nodes.push(hl(text.slice(last, m.index), `${prefix}-pt-${i}`));
     const k = `${prefix}-${i++}`;
     if (m[2])
       nodes.push(
@@ -56,22 +93,22 @@ export function renderInline(text: string, prefix = "il"): ReactNode {
           rel="noopener noreferrer"
           className="text-indigo-500 dark:text-indigo-400 underline underline-offset-2 break-all"
         >
-          {m[2]}
+          {hl(m[2], `${k}-a`)}
         </a>,
       );
     else if (m[4])
       nodes.push(
         <strong key={k}>
-          <em>{m[4]}</em>
+          <em>{hl(m[4], `${k}-si`)}</em>
         </strong>,
       );
     else if (m[5])
       nodes.push(
         <strong key={k} className="font-semibold">
-          {m[5]}
+          {hl(m[5], `${k}-b`)}
         </strong>,
       );
-    else if (m[6]) nodes.push(<em key={k}>{m[6]}</em>);
+    else if (m[6]) nodes.push(<em key={k}>{hl(m[6], `${k}-em`)}</em>);
     else if (m[7])
       nodes.push(
         <code
@@ -83,7 +120,7 @@ export function renderInline(text: string, prefix = "il"): ReactNode {
       );
     last = m.index + m[0].length;
   }
-  if (last < text.length) nodes.push(text.slice(last));
+  if (last < text.length) nodes.push(hl(text.slice(last), `${prefix}-end`));
   if (nodes.length === 0) return text;
   if (nodes.length === 1) return nodes[0];
   return <>{nodes}</>;
@@ -93,9 +130,11 @@ export function renderInline(text: string, prefix = "il"): ReactNode {
 export function MarkdownRenderer({
   content,
   streaming,
+  searchQuery = "",
 }: {
   content: string;
   streaming?: boolean;
+  searchQuery?: string;
 }) {
   const segments: Array<{ type: "text" | "code"; body: string }> = [];
   const CODE_RE = /```(\w*)\n?([\s\S]*?)```/g;
@@ -153,7 +192,7 @@ export function MarkdownRenderer({
           if (ln.trim())
             nodes.push(
               <p key={`p-${nk++}`} className="text-sm leading-relaxed">
-                {renderInline(ln, `p-${nk}`)}
+                {renderInline(ln, `p-${nk}`, searchQuery)}
               </p>,
             );
         });
@@ -184,7 +223,7 @@ export function MarkdownRenderer({
                     key={i}
                     className="px-3 py-1.5 text-left font-semibold text-slate-700 dark:text-slate-200"
                   >
-                    {renderInline(h, `th-${nk}-${i}`)}
+                    {renderInline(h, `th-${nk}-${i}`, searchQuery)}
                   </th>
                 ))}
               </tr>
@@ -200,7 +239,7 @@ export function MarkdownRenderer({
                       key={ci}
                       className="px-3 py-1.5 text-slate-600 dark:text-slate-300"
                     >
-                      {renderInline(cell, `td-${nk}-${ri}-${ci}`)}
+                      {renderInline(cell, `td-${nk}-${ri}-${ci}`, searchQuery)}
                     </td>
                   ))}
                 </tr>
@@ -235,7 +274,7 @@ export function MarkdownRenderer({
             : "text-[13px] font-semibold mt-1";
         nodes.push(
           <p key={`h-${nk++}`} className={cls}>
-            {renderInline(hm[2], `h-${nk}`)}
+            {renderInline(hm[2], `h-${nk}`, searchQuery)}
           </p>,
         );
         continue;
@@ -254,7 +293,7 @@ export function MarkdownRenderer({
       if (bm) {
         const item = (
           <li key={`li-${nk++}`} className="text-sm leading-relaxed">
-            {renderInline(bm[1], `li-${nk}`)}
+            {renderInline(bm[1], `li-${nk}`, searchQuery)}
           </li>
         );
         if (!list || list.kind !== "ul") {
@@ -267,7 +306,7 @@ export function MarkdownRenderer({
       if (nm) {
         const item = (
           <li key={`li-${nk++}`} className="text-sm leading-relaxed">
-            {renderInline(nm[1], `li-${nk}`)}
+            {renderInline(nm[1], `li-${nk}`, searchQuery)}
           </li>
         );
         if (!list || list.kind !== "ol") {
@@ -283,7 +322,7 @@ export function MarkdownRenderer({
       flushList();
       nodes.push(
         <p key={`p-${nk++}`} className="text-sm leading-relaxed">
-          {renderInline(line, `p-${nk}`)}
+          {renderInline(line, `p-${nk}`, searchQuery)}
         </p>,
       );
     }
