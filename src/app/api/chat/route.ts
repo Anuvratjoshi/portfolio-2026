@@ -59,8 +59,41 @@ Key achievements:
 - RBAC for context-appropriate dashboards
 - Implemented Azure Cache for Redis to eliminate redundant 3rd-party LeapXpert API calls: LeapXpert data is synced via cron every 30 minutes so identity verification results are stable within that window - previously every page load across 3 LeapXpert-related pages triggered a live 3rd-party verification call, adding latency and unnecessary external API load; Redis caches the verification response for the cron interval duration, serving subsequent requests instantly from cache instead of hitting LeapXpert each time
 - Memoization + lazy loading to eliminate unnecessary re-renders
-- Built a custom AI-powered chatbot trained on TARDIS platform data to provide contextual in-app guidance
 - Modular backend architecture with robust error-handling mechanisms for high reliability
+
+#### TARDIS AI Assistant (in-house, built from scratch)
+A fully custom AI chatbot embedded inside the TARDIS platform - **no third-party widget, no chatbot SDK, no LangChain, no vector DB**. Every layer (UI, state, API, security, retrieval) is purpose-built. Lives behind the existing authCheck() JWT middleware so unauthenticated users can't touch any AI endpoint.
+
+**LLM provider:** Dual-provider design switched via a single env var (AI_PROVIDER=copilot|azure).
+- **GitHub Copilot** (default) - uses the existing enterprise Copilot agreement, so no new vendor, no extra cost, GPT-4o-class quality.
+- **Azure OpenAI** (gpt-4o-gtvsdashboard deployment) - unlocks function calling / tools.
+
+**Two-layer knowledge architecture:**
+1. **TF-IDF RAG over projectKnowledge.json** - a hand-curated JSON documenting all 50+ TARDIS pages (KPIs, charts, workflows, FAQs). At query time the backend scores the user's message with TF-IDF and injects the top-matching chunks into the system prompt. No vector DB needed - TF-IDF is fast, deterministic, and zero infrastructure.
+2. **Live data registry** - read-only MongoDB queries triggered by a regex-based **intent classifier** that runs in parallel with RAG via Promise.all. Supports 10+ live intents (logged-in users, recent alerts, calls today, trader versions, logins by region, etc). Results are injected as a "## Live Platform Data" block and the LLM is instructed to prefer live data over static knowledge for count/stats questions.
+
+**Function calling tools (Azure mode):** The model can call DB functions on its own with filters extracted from natural language. e.g. *"Show me the last 5 alerts for Singapore"* → model emits a getRecentAlerts({country:"Singapore", limit:5}) tool call → backend runs the read-only Mongoose query → result is fed back → model writes the final natural-language answer with real data. The model decides whether to use a tool or answer from knowledge - no hardcoded routing.
+
+**Two message paths:**
+- **Quick-question chips** - each chip carries a queryKey validated against a whitelist; the matching read-only DB query runs and the number is injected as a hard fact before the LLM answers (no hallucinated counts).
+- **Free-text** - sanitize → auth → rate limit → parallel(intent classifier + TF-IDF) → assemble briefing → stream to LLM.
+
+**True streaming (SSE):** Tokens are forwarded from the LLM to the browser the instant they arrive via fetch + ReadableStream. After [DONE], the backend writes the SSE [DONE] frame **without awaiting the MongoDB persistence write** - the user sees the full response at ~1.4s; the DB write (~1-2s) is awaited afterward and the resulting messageId is pushed down the same SSE channel via an AI_PATCH_MESSAGE_ID event so feedback buttons can attach. DB latency never blocks UX.
+
+**Security highlights:**
+- Read-only enforced: only find/findOne/countDocuments/aggregate with safe stages - no writes anywhere.
+- No raw user text reaches DB query params - the intent classifier maps messages to a controlled queryKey string.
+- aiSanitizer.js strips control chars, HTML, and known prompt-injection patterns on both input and output.
+- API keys live exclusively on the server - never in any frontend file.
+- Promise.allSettled isolates per-tool/per-query failures so one bad data source can't kill the chat.
+- No PII leakage - live queries return counts/aggregates only, never raw user documents.
+- Questions about external systems not synced into TARDIS (e.g. LeapXpert user data) are explicitly refused by the system prompt to prevent hallucinated numbers.
+
+**Frontend:** React 18 + Redux + Redux-Saga, conversation persisted to both localStorage (last 50 msgs) and MongoDB (AiChatSession + AiChatMessage per-message docs, survives device switch). Component tree: AIAssistant → AIAssistantButton + ChatWindow → ChatHeader/ChatBody/ChatInput/SuggestedPrompts. CSS Custom Properties for full dark/light mode with zero UI-library dependency.
+
+**Routes:** POST /chat, POST /chat/stream, GET /sessions, GET /history/:chatId, DELETE /history/:chatId, POST /feedback, GET /health, GET /knowledge/:pageId - all behind authCheck().
+
+**Why this matters:** Anuvrat designed and shipped a production-grade RAG + function-calling assistant with zero external dependencies beyond the LLM itself. He picked TF-IDF over a vector DB because the corpus was small and bounded - the simplest tool that solves the problem wins. He built the dual-provider switch so the team can A/B Copilot vs Azure without code changes. And he kept DB writes off the streaming hot path so users never feel persistence latency.
 
 ### DIIBS - Restaurant & Live Auction Platform
 Dual-purpose platform combining restaurant booking management with real-time bidding auctions. Maintains UI consistency and data accuracy during high-concurrency auction events with multiple simultaneous users.
@@ -495,6 +528,13 @@ export async function POST(req: NextRequest) {
       ) {
         focusHint =
           "INTENT: HIRING INQUIRY. Directly address availability, stack match, notice period, and how to reach Anuvrat. Keep it punchy - recruiters are busy.";
+      } else if (
+        /(tardis.*(bot|assistant|chatbot|ai|rag|tool|tf.?idf|function call|stream))|(bot.*tardis)|(ai assistant.*tardis)/.test(
+          lower,
+        )
+      ) {
+        focusHint =
+          "INTENT: TARDIS AI ASSISTANT DEEP-DIVE. Cover the in-house build: dual-provider (Copilot vs Azure OpenAI), TF-IDF RAG over projectKnowledge.json, regex intent classifier + live data registry running in parallel via Promise.all, Azure function-calling tools (e.g. getRecentAlerts), SSE streaming with non-blocking DB persistence, security model (read-only DB, sanitizer, no PII). Stress: no third-party SDK, no LangChain, no vector DB - built from scratch.";
       } else if (
         /tardis|diibs|antayoga|project|built|platform|system/.test(lower)
       ) {

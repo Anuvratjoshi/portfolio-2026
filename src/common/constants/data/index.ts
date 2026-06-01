@@ -113,7 +113,7 @@ export const PROJECTS: Project[] = [
     title: "TARDIS",
     subtitle: "API Intelligence Platform",
     description:
-      "An enterprise-grade platform built to handle and streamline calling and recording data for a client's business processes. The system integrates multiple external services to collect large volumes of data in real time, then processes, normalizes, and stores it in a structured way so it can be easily consumed and analyzed. A key challenge was maintaining performance under continuous, high-volume data flow from enterprise tools like ServiceNow - solved through caching strategies, optimized queries, and memoized rendering on the frontend.",
+      "An enterprise-grade platform built to handle and streamline calling and recording data for a client's business processes. The system integrates multiple external services to collect large volumes of data in real time, then processes, normalizes, and stores it in a structured way so it can be easily consumed and analyzed. A key challenge was maintaining performance under continuous, high-volume data flow from enterprise tools like ServiceNow - solved through caching strategies, optimized queries, and memoized rendering on the frontend. On top of this, Anuvrat built a fully in-house AI assistant - a custom RAG + function-calling chatbot with dual LLM providers (GitHub Copilot / Azure OpenAI), TF-IDF retrieval over a curated knowledge base, parallel live-data intent classification, and non-blocking SSE streaming - all without a single third-party chatbot SDK or vector database.",
     tags: [
       "Node.js",
       "Express.js",
@@ -123,6 +123,12 @@ export const PROJECTS: Project[] = [
       "ServiceNow",
       "Cron Jobs",
       "RBAC",
+      "AI Assistant",
+      "RAG (TF-IDF)",
+      "GitHub Copilot",
+      "Azure OpenAI",
+      "Function Calling",
+      "SSE Streaming",
     ],
     bullets: [
       "Designed scalable data ingestion pipelines integrating ServiceNow, Cloud9, and Cohesity ASC for continuous real-time data flow across enterprise systems",
@@ -130,6 +136,10 @@ export const PROJECTS: Project[] = [
       "Implemented role-based access control (RBAC) so users see context-appropriate dashboards and permissions based on their business role",
       "Optimized database query performance and applied caching strategies to handle large datasets without latency degradation",
       "Improved React.js dashboard rendering using memoization and lazy loading, eliminating unnecessary re-renders under heavy data loads",
+      "Built a fully in-house AI assistant from scratch (no chatbot SDK, no LangChain, no vector DB) with dual-provider support (GitHub Copilot + Azure OpenAI via a single env-var switch), TF-IDF RAG over a hand-curated 50+ page knowledge base, and a regex intent classifier that triggers read-only MongoDB queries in parallel with retrieval via Promise.all",
+      "Added Azure function-calling tools so the model can dynamically query the database with extracted filters (e.g. recent alerts for a specific country) - letting users ask filtered, real-time questions without any per-question wiring",
+      "Engineered true token-by-token SSE streaming where the [DONE] frame ships before the MongoDB persistence write is awaited, keeping perceived latency at ~1.4s while the resulting messageId is patched in afterwards via a follow-up SSE event",
+      "Hardened the assistant with read-only DB enforcement, input/output sanitization, prompt-injection guards, Promise.allSettled fault isolation, and a strict no-PII query contract - all behind the existing JWT authCheck() middleware",
     ],
   },
   {
