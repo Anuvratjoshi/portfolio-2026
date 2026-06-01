@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * useAnalytics — lightweight hook for tracking CTA clicks.
+ * useAnalytics - lightweight hook for tracking CTA clicks.
  * Reads the persistent visitorId from localStorage and fires
  * POST /api/analytics/cta fire-and-forget (never blocks the user action).
  *
@@ -30,7 +30,7 @@ export function useAnalytics() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ action, visitorId, meta: meta ?? {} }),
     }).catch(() => {
-      // silently ignore — analytics is non-critical
+      // silently ignore - analytics is non-critical
     });
   }, []);
 

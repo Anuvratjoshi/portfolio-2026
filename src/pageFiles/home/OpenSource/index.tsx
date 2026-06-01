@@ -26,7 +26,7 @@ export function OpenSource() {
         <SectionHeading
           label="Open Source"
           title="npm Packages I've Published"
-          subtitle="Production-ready libraries solving real developer pain points — available on the public registry."
+          subtitle="Production-ready libraries solving real developer pain points - available on the public registry."
         />
 
         <StaggerContainer
@@ -108,7 +108,7 @@ export function OpenSource() {
                 </ul>
               </div>
 
-              {/* Callout section — theme-aware, shown when pkg.callout is present */}
+              {/* Callout section - theme-aware, shown when pkg.callout is present */}
               {pkg.callout && (
                 <div
                   className={`mx-6 mb-5 p-4 rounded-xl border ${

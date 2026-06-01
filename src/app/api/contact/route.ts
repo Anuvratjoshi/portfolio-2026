@@ -195,7 +195,7 @@ function buildAutoReplyHtml(name: string): string {
           <tr>
             <td style="background:#0f172a;border-top:1px solid #1e293b;border-radius:0 0 16px 16px;padding:20px 40px;text-align:center;">
               <p style="margin:0 0 4px;font-size:12px;color:#475569;">Senior Full Stack Developer · MERN Stack · AI-Enhanced Workflows</p>
-              <p style="margin:0;font-size:11px;color:#334155;">© ${new Date().getFullYear()} Anuvrat Joshi — Ahmedabad, GJ</p>
+              <p style="margin:0;font-size:11px;color:#334155;">© ${new Date().getFullYear()} Anuvrat Joshi - Ahmedabad, GJ</p>
             </td>
           </tr>
 
@@ -247,7 +247,7 @@ export async function POST(req: NextRequest) {
       from: `"Portfolio Contact" <${process.env.GMAIL_USER}>`,
       to: "joshianuvrat@gmail.com",
       replyTo: email,
-      subject: `📬 New message from ${name} — Portfolio`,
+      subject: `📬 New message from ${name} - Portfolio`,
       html: buildEmailHtml(name, email, message),
       text: `New contact form submission\n\nFrom: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
     });

@@ -11,7 +11,7 @@ export function toast(message: string) {
   _push?.(message);
 }
 
-// ─── Container — mount once inside ChatBot ────────────────────────────────────
+// ─── Container - mount once inside ChatBot ────────────────────────────────────
 export function ToastContainer() {
   const [items, setItems] = useState<{ id: string; msg: string }[]>([]);
 

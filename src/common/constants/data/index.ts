@@ -113,7 +113,7 @@ export const PROJECTS: Project[] = [
     title: "TARDIS",
     subtitle: "API Intelligence Platform",
     description:
-      "An enterprise-grade platform built to handle and streamline calling and recording data for a client's business processes. The system integrates multiple external services to collect large volumes of data in real time, then processes, normalizes, and stores it in a structured way so it can be easily consumed and analyzed. A key challenge was maintaining performance under continuous, high-volume data flow from enterprise tools like ServiceNow — solved through caching strategies, optimized queries, and memoized rendering on the frontend.",
+      "An enterprise-grade platform built to handle and streamline calling and recording data for a client's business processes. The system integrates multiple external services to collect large volumes of data in real time, then processes, normalizes, and stores it in a structured way so it can be easily consumed and analyzed. A key challenge was maintaining performance under continuous, high-volume data flow from enterprise tools like ServiceNow - solved through caching strategies, optimized queries, and memoized rendering on the frontend.",
     tags: [
       "Node.js",
       "Express.js",
@@ -150,7 +150,7 @@ export const PROJECTS: Project[] = [
     title: "ANTAYOGA",
     subtitle: "Mental Health Assessment Platform",
     description:
-      "A personalized mental health platform where users evaluate their well-being through dynamic questionnaires and receive insights based on their responses. The core engineering challenge was the non-linear assessment flow — questions and scoring depended on prior answers, so I built a flexible conditional logic engine that handled branching flows and calculated personalized scores in real time. Data privacy and reliability were top priorities given the sensitivity of the domain.",
+      "A personalized mental health platform where users evaluate their well-being through dynamic questionnaires and receive insights based on their responses. The core engineering challenge was the non-linear assessment flow - questions and scoring depended on prior answers, so I built a flexible conditional logic engine that handled branching flows and calculated personalized scores in real time. Data privacy and reliability were top priorities given the sensitivity of the domain.",
     tags: [
       "React.js",
       "Node.js",
@@ -169,9 +169,9 @@ export const PROJECTS: Project[] = [
   },
   {
     title: "RentEase",
-    subtitle: "Rental Management SaaS — Side Hustle",
+    subtitle: "Rental Management SaaS - Side Hustle",
     description:
-      "A SaaS product Anuvrat is actively building as a side hustle, targeting India's massively underserved rental management market. Nearly 95% of India's ₹2L+ crore rental ecosystem is still managed via WhatsApp, notebooks, and phone calls. RentEase is designed to be the operating system for independent landlords — simple, mobile-first, and built for users who are not necessarily tech-savvy. Frontend MVP is live; backend is in active development.",
+      "A SaaS product Anuvrat is actively building as a side hustle, targeting India's massively underserved rental management market. Nearly 95% of India's ₹2L+ crore rental ecosystem is still managed via WhatsApp, notebooks, and phone calls. RentEase is designed to be the operating system for independent landlords - simple, mobile-first, and built for users who are not necessarily tech-savvy. Frontend MVP is live; backend is in active development.",
     link: "https://rent-ease-client-beta.vercel.app/",
     linkLabel: "View Live Site",
     badge: "Side Project · In Development",
@@ -190,23 +190,23 @@ export const PROJECTS: Project[] = [
     ],
     bullets: [
       "Market size: Knight Frank pegs India's rental housing market at $20B–$34B+, with continued growth projected through 2030 driven by urban migration, rising property prices, and workforce mobility (Knight Frank, 2019)",
-      "The gap: ET Edge Insights reports ~95% of India's rental inventory remains unorganised — landlords still operating via WhatsApp, notebooks, and phone calls in 2026",
-      "Target user: independent landlords managing 1–20 units who find enterprise tools too complex — a segment too small for institutions but too large to ignore",
-      "Moat: once a landlord uploads tenants, agreements, rent records, and documents, switching cost is high — natural SaaS retention with a recurring monthly loop",
-      "Status: frontend MVP live and deployed solo; backend in active development alongside full-time role — product thinking built from first principles",
+      "The gap: ET Edge Insights reports ~95% of India's rental inventory remains unorganised - landlords still operating via WhatsApp, notebooks, and phone calls in 2026",
+      "Target user: independent landlords managing 1–20 units who find enterprise tools too complex - a segment too small for institutions but too large to ignore",
+      "Moat: once a landlord uploads tenants, agreements, rent records, and documents, switching cost is high - natural SaaS retention with a recurring monthly loop",
+      "Status: frontend MVP live and deployed solo; backend in active development alongside full-time role - product thinking built from first principles",
     ],
     sources: [
       {
-        label: "95% of India's rental market is unorganised — ET Edge Insights",
+        label: "95% of India's rental market is unorganised - ET Edge Insights",
         url: "https://etedge-insights.com/industry/real-estate/indias-rental-housing-problem-isnt-supply-its-standardisation/",
       },
       {
-        label: "Indian rental housing market valued $20B–$34B+ — Knight Frank",
+        label: "Indian rental housing market valued $20B–$34B+ - Knight Frank",
         url: "https://content.knightfrank.com/research/1004/documents/en/india-topical-reports-institutionalising-the-rental-housing-market-in-india-2019-6718.pdf",
       },
       {
         label:
-          "India rental housing market growth forecast to 2030 — TechSci Research",
+          "India rental housing market growth forecast to 2030 - TechSci Research",
         url: "https://www.techsciresearch.com/report/india-rental-housing-market/4811.html",
       },
     ],
@@ -222,7 +222,7 @@ export const AI_WORKFLOW = [
   {
     title: "Structured AI Context",
     description:
-      "Created a .github/instruction.md defining complete project architecture, components, and workflows — enabling AI models to operate with full codebase context.",
+      "Created a .github/instruction.md defining complete project architecture, components, and workflows - enabling AI models to operate with full codebase context.",
   },
   {
     title: "AI-Assisted MERN Development",
@@ -263,22 +263,22 @@ export const NPM_PACKAGES = [
     longDescription:
       "Zero-dependency error enrichment library for Node.js and TypeScript. Runs every error through a 6-stage pure-function pipeline: normalize → parse stack → extract cause chain → enrich → analyze → assemble. Ships 630+ built-in error patterns and optionally enhances results with AI-generated suggestions from any OpenAI-compatible provider (Groq, xAI, OpenRouter).",
     highlights: [
-      "Zero dependencies — pure TypeScript, ships ESM + CJS",
-      "6-stage deterministic pipeline — normalize, parse, extract, enrich, analyze, assemble",
+      "Zero dependencies - pure TypeScript, ships ESM + CJS",
+      "6-stage deterministic pipeline - normalize, parse, extract, enrich, analyze, assemble",
       "Severity classification: critical / high / medium / low",
       "Root-cause chain traversal with cycle detection",
       "Stable 8-char fingerprint for error deduplication",
-      "Request sanitisation — Authorization, Cookie auto-redacted unconditionally",
+      "Request sanitisation - Authorization, Cookie auto-redacted unconditionally",
       "Plugin system with 3 built-in plugins: httpStatus, nodeSystem, grouping",
       "Framework adapters for Express, Fastify, Next.js App & Pages Router",
     ],
     aiFeatures: [
-      "analyzeErrorAsync — calls any OpenAI-compatible provider (default: Groq) after the pipeline",
-      "aiSuggestion[] — short targeted hints from the LLM, always alongside pattern-based suggestions",
-      "aiFixSuggested — corrected source code with inline comments (dev only, never in production)",
-      "wrapAsyncWithAI & withErrorBoundaryAsync — auto-pass fn.toString() as context for precise fixes",
+      "analyzeErrorAsync - calls any OpenAI-compatible provider (default: Groq) after the pipeline",
+      "aiSuggestion[] - short targeted hints from the LLM, always alongside pattern-based suggestions",
+      "aiFixSuggested - corrected source code with inline comments (dev only, never in production)",
+      "wrapAsyncWithAI & withErrorBoundaryAsync - auto-pass fn.toString() as context for precise fixes",
       "Provider-agnostic: swap to xAI Grok or OpenRouter with two config fields",
-      "Graceful fallback — pattern suggestions always present even when AI quota is exhausted",
+      "Graceful fallback - pattern suggestions always present even when AI quota is exhausted",
     ],
     tags: [
       "TypeScript",
@@ -298,12 +298,12 @@ export const NPM_PACKAGES = [
       label: "AI-Powered Features",
       theme: "amber" as const,
       items: [
-        "analyzeErrorAsync — calls any OpenAI-compatible provider (default: Groq) after the pipeline",
-        "aiSuggestion[] — LLM-generated hints alongside the 630+ pattern-based suggestions",
-        "aiFixSuggested — corrected source code with inline comments (dev only, never in production)",
-        "wrapAsyncWithAI & withErrorBoundaryAsync — auto-pass fn.toString() as context for precise fixes",
+        "analyzeErrorAsync - calls any OpenAI-compatible provider (default: Groq) after the pipeline",
+        "aiSuggestion[] - LLM-generated hints alongside the 630+ pattern-based suggestions",
+        "aiFixSuggested - corrected source code with inline comments (dev only, never in production)",
+        "wrapAsyncWithAI & withErrorBoundaryAsync - auto-pass fn.toString() as context for precise fixes",
         "Provider-agnostic: swap to xAI Grok or OpenRouter with two config fields",
-        "Graceful fallback — pattern suggestions always present even when AI quota is exhausted",
+        "Graceful fallback - pattern suggestions always present even when AI quota is exhausted",
       ],
     },
   },
@@ -311,18 +311,18 @@ export const NPM_PACKAGES = [
     name: "@joshianuvrat/type-bridge",
     version: "1.0.2",
     description:
-      "Automatically sync backend TypeScript types to the frontend — zero manual duplication.",
+      "Automatically sync backend TypeScript types to the frontend - zero manual duplication.",
     longDescription:
-      "A CLI tool + Node.js library that parses your backend TypeScript source with ts-morph, strips backend-only constructs (Mongoose Document, Express Request/Response, sensitive fields like password), and emits clean, tree-shakable type files — eliminating type duplication and frontend/backend contract drift entirely.",
+      "A CLI tool + Node.js library that parses your backend TypeScript source with ts-morph, strips backend-only constructs (Mongoose Document, Express Request/Response, sensitive fields like password), and emits clean, tree-shakable type files - eliminating type duplication and frontend/backend contract drift entirely.",
     highlights: [
       "3-stage pipeline: Extract (ts-morph AST) → Transform → Generate",
-      "Strips sensitive fields (password, token, secret) by default — never leaks to frontend",
+      "Strips sensitive fields (password, token, secret) by default - never leaks to frontend",
       "Date → string and ObjectId → string conversions out of the box",
       "Enum → union type conversion (or preserve enums with preserveEnums: true)",
       "Removes backend-only heritage: Document, Model, Request, Response, NextFunction",
       "@type-bridge-ignore JSDoc tag to exclude any individual declaration",
-      "Watch mode with 300ms debounce via chokidar — real-time sync in dev",
-      "Optional SDK Generator — scans Express routes and emits a typed fetch client",
+      "Watch mode with 300ms debounce via chokidar - real-time sync in dev",
+      "Optional SDK Generator - scans Express routes and emits a typed fetch client",
       "Hash header on each generated file for CI staleness detection",
       "Programmatic API: loadConfig, runExtractor, runTransformer, runGenerator, runPipeline",
     ],
@@ -343,11 +343,11 @@ export const NPM_PACKAGES = [
       label: "Security-First Pipeline",
       theme: "teal" as const,
       items: [
-        "Sensitive fields (password, token, secret) stripped by default — never leaks to frontend",
+        "Sensitive fields (password, token, secret) stripped by default - never leaks to frontend",
         "@type-bridge-ignore JSDoc tag excludes any individual declaration from generation",
-        "Only export-ed declarations are processed — private types stay private",
+        "Only export-ed declarations are processed - private types stay private",
         "Hash header on each generated file enables CI staleness detection",
-        "No runtime access — purely build-time, zero database or env-var exposure",
+        "No runtime access - purely build-time, zero database or env-var exposure",
         "SDK Generator emits a typed fetch client from Express route registrations",
       ],
     },

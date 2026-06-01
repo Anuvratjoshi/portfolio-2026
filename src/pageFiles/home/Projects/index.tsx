@@ -182,7 +182,7 @@ export function Projects() {
                 …and a lot more
               </p>
               <p className="text-slate-400 dark:text-slate-500 text-xs mt-0.5">
-                OSS tools, side projects, experiments — all on GitHub
+                OSS tools, side projects, experiments - all on GitHub
               </p>
             </div>
           </div>

@@ -14,7 +14,7 @@ export interface GuestbookEntry {
   approved: boolean;
 }
 
-/** GET /api/guestbook — returns all approved entries, newest first */
+/** GET /api/guestbook - returns all approved entries, newest first */
 export async function GET() {
   try {
     const db = await getDb();
@@ -33,7 +33,7 @@ export async function GET() {
   }
 }
 
-/** POST /api/guestbook — submit a new entry (pending approval) */
+/** POST /api/guestbook - submit a new entry (pending approval) */
 export async function POST(req: NextRequest) {
   const contentType = req.headers.get("content-type") ?? "";
   if (!contentType.includes("application/json")) {
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Basic spam filter — reject messages that are only URLs or repeated chars
+  // Basic spam filter - reject messages that are only URLs or repeated chars
   if (/^https?:\/\//i.test(message) || /(.)\1{9,}/.test(message)) {
     return NextResponse.json(
       { error: "Message looks like spam." },

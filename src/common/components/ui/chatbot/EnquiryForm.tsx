@@ -37,7 +37,7 @@ export function EnquiryForm({ onBack }: { onBack: () => void }) {
         const json = await res.json().catch(() => ({}));
         if (json?.error === "invalid_email_domain") {
           setEmailError(
-            "That domain has no mail server — please use a real email address.",
+            "That domain has no mail server - please use a real email address.",
           );
           setStatus("idle");
           return;
@@ -68,7 +68,7 @@ export function EnquiryForm({ onBack }: { onBack: () => void }) {
           Message sent!
         </p>
         <p className="text-slate-500 dark:text-slate-400 text-sm">
-          Anuvrat will get back to you shortly. He&apos;s fast — unlike his API
+          Anuvrat will get back to you shortly. He&apos;s fast - unlike his API
           credits.
         </p>
         <button
@@ -102,7 +102,7 @@ export function EnquiryForm({ onBack }: { onBack: () => void }) {
         className="flex-1 overflow-y-auto overflow-x-hidden px-4 pt-4 pb-4 flex flex-col gap-3"
       >
         <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-          Drop a message directly to Anuvrat. He responds fast — usually faster
+          Drop a message directly to Anuvrat. He responds fast - usually faster
           than this bot.
         </p>
         <div>

@@ -40,7 +40,7 @@ export function Contact() {
         const json = await res.json().catch(() => ({}));
         const msg =
           json?.error === "invalid_email_domain"
-            ? "That email address doesn't look real — the domain has no mail server. Please use a valid email."
+            ? "That email address doesn't look real - the domain has no mail server. Please use a valid email."
             : (json?.message ??
               json?.error ??
               "Something went wrong. Please try again.");

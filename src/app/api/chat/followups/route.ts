@@ -205,7 +205,7 @@ export async function POST(req: NextRequest) {
       questions = [...questions, ...extra];
     }
 
-    // Attempt 3: all have been shown — reset and pick fresh ones
+    // Attempt 3: all have been shown - reset and pick fresh ones
     if (questions.length === 0) {
       questions = await db
         .collection("followup_questions")

@@ -21,7 +21,7 @@ function AnimatedCounter({ value }: { value: string }) {
   const isInView = useInView(ref, { once: true });
   const [displayed, setDisplayed] = useState(0);
 
-  // Parse once — stable values, not re-created every render
+  // Parse once - stable values, not re-created every render
   const { numeric, suffix, isNumeric } = useMemo(() => {
     const m = value.match(/^(\d+)(.*)$/);
     return m
@@ -242,7 +242,7 @@ export function Hero() {
             </motion.a>
           ))}
         </motion.div>
-        {/* Stats — animated counters */}
+        {/* Stats - animated counters */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

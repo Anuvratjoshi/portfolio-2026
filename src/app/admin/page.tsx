@@ -141,7 +141,7 @@ export default function AdminPage() {
     return () => clearInterval(id);
   }, [authed, password, fetchStats]);
 
-  // Lock navigation while logged in — push /admin back on popstate
+  // Lock navigation while logged in - push /admin back on popstate
   useEffect(() => {
     if (!authed) return;
     // Push a history entry so back button hits this before leaving
@@ -364,7 +364,7 @@ export default function AdminPage() {
           <div className="bg-slate-800 rounded-xl border border-slate-700">
             {stats?.pendingGuestbook.length === 0 ? (
               <p className="text-slate-500 text-sm p-6">
-                No pending entries — all clear!
+                No pending entries - all clear!
               </p>
             ) : (
               <div className="divide-y divide-slate-700">

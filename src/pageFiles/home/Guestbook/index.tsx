@@ -33,7 +33,8 @@ const AVATAR_COLORS = [
 ];
 function avatarColor(name: string) {
   let hash = 0;
-  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  for (let i = 0; i < name.length; i++)
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
   return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
 }
 
@@ -104,10 +105,12 @@ export function Guestbook() {
       });
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error ?? "Something went wrong. Please try again.");
+        throw new Error(
+          data.error ?? "Something went wrong. Please try again.",
+        );
       }
 
-      // Entry is pending approval — don't add to list yet
+      // Entry is pending approval - don't add to list yet
       setStatus("success");
       setName("");
       setMessage("");
@@ -128,7 +131,7 @@ export function Guestbook() {
         <SectionHeading
           label="Guestbook"
           title="Leave a Note"
-          subtitle="Sign the guestbook — say hi, leave feedback, or just let me know you visited."
+          subtitle="Sign the guestbook - say hi, leave feedback, or just let me know you visited."
         />
 
         <div className="grid lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
@@ -151,7 +154,8 @@ export function Guestbook() {
                     Thanks for signing!
                   </p>
                   <p className="text-slate-500 dark:text-slate-400 text-sm">
-                    Your note is under review and will appear here once approved.
+                    Your note is under review and will appear here once
+                    approved.
                   </p>
                   <button
                     onClick={() => setStatus("idle")}
@@ -208,14 +212,21 @@ export function Guestbook() {
 
                   {status === "error" && errorMsg && (
                     <div className="flex items-start gap-2 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-                      <AlertCircle size={16} className="text-red-500 mt-0.5 shrink-0" />
-                      <p className="text-red-700 dark:text-red-300 text-sm">{errorMsg}</p>
+                      <AlertCircle
+                        size={16}
+                        className="text-red-500 mt-0.5 shrink-0"
+                      />
+                      <p className="text-red-700 dark:text-red-300 text-sm">
+                        {errorMsg}
+                      </p>
                     </div>
                   )}
 
                   <button
                     type="submit"
-                    disabled={status === "loading" || !name.trim() || !message.trim()}
+                    disabled={
+                      status === "loading" || !name.trim() || !message.trim()
+                    }
                     className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors duration-200 text-sm"
                   >
                     {status === "loading" ? (
@@ -256,7 +267,10 @@ export function Guestbook() {
                 </div>
               ) : entries.length === 0 ? (
                 <div className="flex flex-col items-center justify-center gap-3 py-16 text-center rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700">
-                  <MessageSquareHeart size={32} className="text-slate-300 dark:text-slate-600" />
+                  <MessageSquareHeart
+                    size={32}
+                    className="text-slate-300 dark:text-slate-600"
+                  />
                   <p className="text-slate-400 dark:text-slate-500 text-sm font-medium">
                     No notes yet
                   </p>
@@ -273,7 +287,11 @@ export function Guestbook() {
                         initial={{ opacity: 0, y: -16, scale: 0.98 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.96 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 400,
+                          damping: 30,
+                        }}
                         className={`relative group rounded-2xl p-4 border transition-colors bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600`}
                       >
                         {/* Quote icon */}
@@ -317,4 +335,3 @@ export function Guestbook() {
     </section>
   );
 }
-

@@ -21,7 +21,7 @@ export function AIWorkflow() {
         <SectionHeading
           label="AI Workflow"
           title="Engineering Accelerated by AI"
-          subtitle="I don't just use AI tools — I build structured workflows that make them production-ready."
+          subtitle="I don't just use AI tools - I build structured workflows that make them production-ready."
         />
 
         {/* Central visual */}

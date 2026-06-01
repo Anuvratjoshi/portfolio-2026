@@ -4,7 +4,7 @@ import { getDb } from "@/lib/mongodb";
 /**
  * DELETE /api/chat/session
  * Clears a chat session from MongoDB when the user resets the chat.
- * Always responds 204 (non-fatal — client doesn't need to know if it failed).
+ * Always responds 204 (non-fatal - client doesn't need to know if it failed).
  */
 export async function DELETE(req: NextRequest) {
   try {
@@ -17,7 +17,7 @@ export async function DELETE(req: NextRequest) {
       .collection("chat_sessions")
       .deleteOne({ sessionId: sessionId.slice(0, 64) });
   } catch {
-    // Non-fatal — silently ignore
+    // Non-fatal - silently ignore
   }
   return new Response(null, { status: 204 });
 }

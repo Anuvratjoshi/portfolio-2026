@@ -48,10 +48,10 @@ function createClient(): Promise<MongoClient> {
     console.warn(`${tag} Server closed: ${e.address}`),
   );
   client.on("topologyOpening", () =>
-    console.log(`${tag} Topology opening — establishing connection pool…`),
+    console.log(`${tag} Topology opening - establishing connection pool…`),
   );
   client.on("topologyClosed", () =>
-    console.warn(`${tag} Topology closed — all connections released.`),
+    console.warn(`${tag} Topology closed - all connections released.`),
   );
   client.on("connectionPoolCreated", (e) =>
     console.log(
@@ -185,7 +185,7 @@ async function ensureCollections(db: Db): Promise<void> {
       `${tag2} ✓ Collection 'followup_questions' ready (${fqCount} questions).`,
     );
   } catch (err) {
-    // Non-fatal — app still works, just log it
+    // Non-fatal - app still works, just log it
     console.warn(
       `${tag2} Collection bootstrap warning:`,
       (err as Error).message,

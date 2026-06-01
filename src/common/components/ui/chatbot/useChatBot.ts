@@ -373,7 +373,7 @@ export function useChatBot() {
               id: assistantId,
               role: "assistant",
               content:
-                "Connection hiccup. Check your network and try again — unlike Anuvrat's skills, my connection isn't always reliable.",
+                "Connection hiccup. Check your network and try again - unlike Anuvrat's skills, my connection isn't always reliable.",
               timestamp: Date.now(),
               error: true,
               failedInput: trimmed,

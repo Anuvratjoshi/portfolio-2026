@@ -110,7 +110,7 @@ export const MessageBubble = memo(function MessageBubble({
           <div
             className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed transition-colors ${
               isUser
-                ? "bg-indigo-600 text-white rounded-br-sm whitespace-pre-wrap wrap-break-word"
+                ? `bg-indigo-600 text-white rounded-br-sm whitespace-pre-wrap wrap-break-word${isActiveMatch ? " ring-2 ring-amber-400 dark:ring-amber-300" : ""}`
                 : `bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-bl-sm ${msg.bookmarked ? "ring-1 ring-amber-400/50 dark:ring-amber-500/40" : ""}${isActiveMatch ? " ring-2 ring-indigo-400 dark:ring-indigo-500" : ""}`
             }`}
           >
@@ -182,7 +182,7 @@ export const MessageBubble = memo(function MessageBubble({
         </motion.button>
       )}
 
-      {/* Reactions + follow-up chips — only on last bot message */}
+      {/* Reactions + follow-up chips - only on last bot message */}
       <AnimatePresence>
         {!isUser && !msg.streaming && isLast && !msg.error && (
           <motion.div
