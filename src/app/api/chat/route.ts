@@ -44,7 +44,7 @@ Full Stack Developer at ACS NETWORKS & TECHNOLOGY (Jul 2022 – Sep 2023), Dehra
 Languages: JavaScript (ES6+), TypeScript, Python
 Frontend: React.js, Next.js, Redux, Tailwind CSS, HTML5, CSS3, GraphQL, Bootstrap, Shadcn/UI
 Backend: Node.js, Express.js, RESTful APIs, Microservices, DSA
-Databases: MongoDB, Mongoose ORM, Azure Cosmos DB, SQL
+Databases: MongoDB, Mongoose ORM, Azure Cosmos DB, SQL, PostgreSQL
 Cloud & Tools: Git, GitHub, Azure Blob Storage, Azure Cache for Redis, Azure Logic Apps, Azure Event Grid, Azure Boards, Postman, Agile/Scrum, Bruno
 AI Tools: GitHub Copilot (Grok Code Fast 1, Claude Sonnet, Claude Opus 4.7), Prompt Engineering, AI-Assisted Development
 
@@ -52,7 +52,10 @@ AI Tools: GitHub Copilot (Grok Code Fast 1, Claude Sonnet, Claude Opus 4.7), Pro
 
 ### TARDIS - API Intelligence Platform
 An enterprise-grade platform for handling and streamlining calling and recording data. Integrates multiple external services (ServiceNow, Cloud9, Cohesity ASC) to collect large volumes of data in real time, then processes, normalizes, and stores it. Used caching, optimized queries, and memoized React rendering to handle continuous high-volume data flow.
-Tech: Node.js, Express.js, React.js, Azure Blob Storage, Azure Cache for Redis, MongoDB, ServiceNow, Cron Jobs, RBAC
+Tech: Node.js, Express.js, React.js, Azure Blob Storage, Azure Cache for Redis, Azure Logic Apps, Azure Event Grid, MongoDB, ServiceNow, Cron Jobs, Web Scraping, RBAC
+
+**Production scale:** Large-scale system spanning 50+ MongoDB collections and millions of records. Anuvrat owns the event-driven backbone end-to-end: cron-based automations for scheduled normalization/cleanup, Azure Logic Apps for low-code workflow orchestration between enterprise systems, Azure Event Grid for fan-out and event routing across services, and custom web scraping pipelines for sources that don't expose APIs. Backend performance optimizations (compound indexes, lean queries, aggregation pipeline tuning, Redis caching of expensive 3rd-party calls) keep response times low even as the dataset grows.
+
 Key achievements:
 - Scalable data ingestion pipelines for real-time enterprise data flow
 - Cron-based automation for normalization and cleanup
@@ -71,6 +74,17 @@ A fully custom AI chatbot embedded inside the TARDIS platform - **no third-party
 **Two-layer knowledge architecture:**
 1. **TF-IDF RAG over projectKnowledge.json** - a hand-curated JSON documenting all 50+ TARDIS pages (KPIs, charts, workflows, FAQs). At query time the backend scores the user's message with TF-IDF and injects the top-matching chunks into the system prompt. No vector DB needed - TF-IDF is fast, deterministic, and zero infrastructure.
 2. **Live data registry** - read-only MongoDB queries triggered by a regex-based **intent classifier** that runs in parallel with RAG via Promise.all. Supports 10+ live intents (logged-in users, recent alerts, calls today, trader versions, logins by region, etc). Results are injected as a "## Live Platform Data" block and the LLM is instructed to prefer live data over static knowledge for count/stats questions.
+
+**End-to-end request flow (the full RAG pipeline):**
+1. **Frontend (React)** - User types in ChatInput.js → aiSanitizer.js strips HTML and known prompt-injection patterns → Redux action dispatched → Redux-Saga picks it up → POST /api/v1/aiAssistant/chat with { message, chatId, currentRoute, currentPage }.
+2. **Middleware** - authCheck() reads the JWT, injects logedInEmail into req.body (401 on invalid). Then a per-user rate limiter caps usage at 30 req/min (429 if exceeded).
+3. **Controller — chat()** - sanitizeInput() caps the message at 2000 chars and re-filters injection patterns. getOrCreateChatSession() looks up or creates the MongoDB AiChatSession. getRecentMessages() pulls the last N messages from AiChatMessage to feed conversation history.
+4. **Parallel retrieval (Promise.all)** - Two retrievers run at the same time so total latency is max(A, B), not A+B:
+   - **A) TF-IDF RAG:** tokenize the user query → score against projectKnowledge.json → return top 8 matching chunks as platform knowledge.
+   - **B) Intent classifier + live data:** regex-match the message; on a hit, run the mapped MongoDB query (countDocuments / aggregate, read-only) → return a live data block of authoritative numbers.
+5. **buildSystemPrompt()** - assembles the LLM briefing in a strict order: behaviour rules + scope restrictions → live data block (authoritative, takes precedence) → RAG chunks (platform knowledge) → conversation history → the user's question. This ordering ensures the model trusts live numbers over static docs and never hallucinates counts.
+6. **LLM call (Azure / Copilot)** - briefing sent with the AI_TOOLS array and tool_choice:"auto". Azure decides: either emit text (answered from RAG/live data) or emit a tool call. If a tool call is emitted, the backend runs the matching read-only DB function with the filters the model extracted, feeds the result back to Azure in a second call, and Azure writes the final natural-language reply.
+7. **Streaming response** - tokens stream back via SSE the moment they're produced; the [DONE] frame ships before the MongoDB persistence write is awaited (see below).
 
 **Function calling tools (Azure mode):** The model can call DB functions on its own with filters extracted from natural language. e.g. *"Show me the last 5 alerts for Singapore"* → model emits a getRecentAlerts({country:"Singapore", limit:5}) tool call → backend runs the read-only Mongoose query → result is fed back → model writes the final natural-language answer with real data. The model decides whether to use a tool or answer from knowledge - no hardcoded routing.
 
