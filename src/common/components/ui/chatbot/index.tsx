@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef, useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Bot, X } from "lucide-react";
 import { useChatBot } from "./useChatBot";
@@ -50,6 +51,142 @@ export function ChatBot() {
     lastBotMsg,
     charCount,
   } = useChatBot();
+
+  // ── Expand / resize ──────────────────────────────────────────────────────────
+  const DEFAULT_WIDTH = 400;
+  const EXPANDED_WIDTH = 800;
+  const PANEL_HEIGHT = 540;
+
+  const [expanded, setExpanded] = useState(false);
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+
+  const posInitializedRef = useRef(false);
+  const isDraggingRef = useRef(false);
+  const dragStartRef = useRef({
+    mouseX: 0,
+    mouseY: 0,
+    startLeft: 0,
+    startTop: 0,
+  });
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  // Compute pixel width (SSR-safe: panel is never in DOM during SSR since open=false)
+  const panelWidth =
+    expanded && typeof window !== "undefined"
+      ? Math.min(EXPANDED_WIDTH, Math.floor(window.innerWidth * 0.8))
+      : expanded
+        ? EXPANDED_WIDTH
+        : DEFAULT_WIDTH;
+
+  // Set default position (bottom-right) the first time the chat opens
+  useEffect(() => {
+    if (open && !posInitializedRef.current) {
+      posInitializedRef.current = true;
+      setPos({
+        x: window.innerWidth - DEFAULT_WIDTH - 24,
+        y: Math.max(0, window.innerHeight - PANEL_HEIGHT - 96),
+      });
+    }
+  }, [open]);
+
+  // Re-clamp position when the panel width changes (expand/collapse)
+  useEffect(() => {
+    if (!posInitializedRef.current) return;
+    const w = expanded
+      ? Math.min(EXPANDED_WIDTH, Math.floor(window.innerWidth * 0.8))
+      : DEFAULT_WIDTH;
+    setPos((p) => ({
+      x: Math.max(0, Math.min(p.x, window.innerWidth - w)),
+      y: Math.max(0, Math.min(p.y, window.innerHeight - PANEL_HEIGHT)),
+    }));
+  }, [expanded]);
+
+  // Re-clamp on viewport resize
+  useEffect(() => {
+    const onResize = () => {
+      if (!posInitializedRef.current) return;
+      const w = expanded
+        ? Math.min(EXPANDED_WIDTH, Math.floor(window.innerWidth * 0.8))
+        : DEFAULT_WIDTH;
+      setPos((p) => ({
+        x: Math.max(0, Math.min(p.x, window.innerWidth - w)),
+        y: Math.max(0, Math.min(p.y, window.innerHeight - PANEL_HEIGHT)),
+      }));
+    };
+    window.addEventListener("resize", onResize, { passive: true });
+    return () => window.removeEventListener("resize", onResize);
+  }, [expanded]);
+
+  const handleToggleExpand = useCallback(() => {
+    setExpanded((v) => !v);
+  }, []);
+
+  // ── Drag handlers ─────────────────────────────────────────────────────────
+  // Drag is activated only when the pointer lands on [data-drag-handle] (the
+  // header bar) and NOT on an interactive child (button / input / textarea).
+  const onPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (!(e.target as Element).closest("[data-drag-handle]")) return;
+    if ((e.target as Element).closest("button, input, textarea")) return;
+
+    e.preventDefault();
+    const panel = panelRef.current;
+    if (!panel) return;
+
+    const rect = panel.getBoundingClientRect();
+    isDraggingRef.current = true;
+    setIsDragging(true);
+    dragStartRef.current = {
+      mouseX: e.clientX,
+      mouseY: e.clientY,
+      startLeft: rect.left,
+      startTop: rect.top,
+    };
+    // Capture pointer so move/up events route to this element even outside bounds
+    panel.setPointerCapture(e.pointerId);
+  }, []);
+
+  // Direct DOM mutation during move — bypasses React for smooth 60 fps dragging
+  const onPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDraggingRef.current) return;
+    const panel = panelRef.current;
+    if (!panel) return;
+
+    const dx = e.clientX - dragStartRef.current.mouseX;
+    const dy = e.clientY - dragStartRef.current.mouseY;
+    const newLeft = Math.max(
+      0,
+      Math.min(
+        dragStartRef.current.startLeft + dx,
+        window.innerWidth - panel.offsetWidth,
+      ),
+    );
+    const newTop = Math.max(
+      0,
+      Math.min(
+        dragStartRef.current.startTop + dy,
+        window.innerHeight - panel.offsetHeight,
+      ),
+    );
+
+    panel.style.left = `${newLeft}px`;
+    panel.style.top = `${newTop}px`;
+  }, []);
+
+  // Commit final position to state on release (triggers one re-render)
+  const onPointerUp = useCallback(() => {
+    if (!isDraggingRef.current) return;
+    isDraggingRef.current = false;
+    setIsDragging(false);
+
+    const panel = panelRef.current;
+    if (!panel) return;
+    const left = parseFloat(panel.style.left);
+    const top = parseFloat(panel.style.top);
+    if (!isNaN(left) && !isNaN(top)) {
+      setPos({ x: left, y: top });
+    }
+  }, []);
 
   return (
     <>
@@ -203,19 +340,36 @@ export function ChatBot() {
       <AnimatePresence>
         {open && (
           <motion.div
+            ref={panelRef}
             key="chat-panel"
             initial={{ opacity: 0, y: 24, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 340, damping: 28 }}
-            className="fixed bottom-24 right-6 z-50 w-92.5 max-w-[calc(100vw-24px)] rounded-2xl overflow-hidden shadow-2xl shadow-black/30 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex flex-col"
-            style={{ height: "540px" }}
+            aria-label="AJ Bot chat window"
+            role="dialog"
+            aria-modal="true"
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
+            onPointerCancel={onPointerUp}
+            className={`fixed z-50 rounded-2xl overflow-hidden shadow-2xl shadow-black/30 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex flex-col${isDragging ? " cursor-grabbing select-none" : ""}`}
+            style={{
+              width: panelWidth,
+              height: PANEL_HEIGHT,
+              maxWidth: "calc(100vw - 24px)",
+              left: pos.x,
+              top: pos.y,
+              transition: "width 0.2s ease",
+            }}
           >
             {/* Header */}
             <ChatHeader
               view={view}
               messageCount={messages.length}
               isSearchOpen={isSearchOpen}
+              expanded={expanded}
+              isDragging={isDragging}
               onEnquiry={() => setView("enquiry")}
               onExport={exportChat}
               onReset={reset}
@@ -224,6 +378,7 @@ export function ChatBot() {
                 setIsSearchOpen((v) => !v);
                 if (isSearchOpen) setSearchQuery("");
               }}
+              onToggleExpand={handleToggleExpand}
             />
 
             {/* View switcher */}

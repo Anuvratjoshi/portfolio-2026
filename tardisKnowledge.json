@@ -1,0 +1,1126 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-05-19",
+  "app": {
+    "name": "TARDIS",
+    "fullName": "TARDIS (TVOC API & Recording Data Intelligence System) Platform",
+    "description": "TARDIS is a comprehensive operations monitoring and management platform for financial institutions, covering Trader Voice (TV) communications infrastructure, Ops Compliance (OC) compliance monitoring, and Administration functions.",
+    "primaryModules": ["Tradervoice", "OpsCompliance", "Administration"]
+  },
+  "roles": {
+    "Doctor": "Super-admin with access to all modules and administration features",
+    "TV Admin": "Tradervoice administrator with full TV module access",
+    "TV Operations": "Tradervoice operations team with standard TV access",
+    "TV GETEC": "Specialized role limited to GETEC monitoring within the TV module",
+    "OC Admin": "OpsCompliance administrator with full OC module access",
+    "OC Analyst": "OpsCompliance analyst with standard OC access"
+  },
+  "modules": [
+    {
+      "id": "tradervoice",
+      "name": "Trader Voice (TV)",
+      "description": "Monitors and manages the Trader Voice telecommunications infrastructure for financial trading floors. This module tracks voice recording compliance, system health, connection counts, cloud telephony, messaging services, and billing across all global regions (AMER, EMEA, APAC).",
+      "color": "#405189",
+      "icon": "ri-headphone-line",
+      "pages": [
+        "tardis-tv-main",
+        "tardis-tv-dailychecks",
+        "tardis-tv-accsys",
+        "tardis-tv-servicenow",
+        "tardis-tv-cloud9",
+        "tardis-tv-voiceinsights",
+        "tardis-tv-twilio",
+        "tardis-tv-cohesityasp",
+        "tardis-tv-activity",
+        "tardis-tv-analytics",
+        "tardis-tv-tools",
+        "tardis-tv-telemessage",
+        "tardis-tv-cloud9billing",
+        "mrl-incident",
+        "maintenanceCalendar",
+        "dubber",
+        "tardis-tv-leapxpert",
+        "tardis-tv-getec",
+        "tardis-tv-reconciliation",
+        "tardis-tv-voicecounts",
+        "tardis-tv-leapxpertSgp",
+        "tardis-tv-leapxpertEmea",
+        "mrl-report-reconciliation"
+      ],
+      "allowedRoles": ["Doctor", "TV Admin", "TV Operations"]
+    },
+    {
+      "id": "opscompliance",
+      "name": "Ops Compliance (OC)",
+      "description": "Oversees compliance monitoring for operations teams. Tracks communications compliance, recording archiving, message counts, device management, secret management via Thycotic, activity logs, and reconciliation reports across the organization.",
+      "color": "#0ab39c",
+      "icon": "ri-shield-check-line",
+      "pages": [
+        "tardis-oc-main",
+        "tardis-oc-accsys",
+        "tardis-oc-servicenow",
+        "tardis-oc-msteamsasc",
+        "tardis-oc-veritasmerge",
+        "tardis-oc-telemessage",
+        "tardis-oc-activity",
+        "mobile-device-mgt",
+        "thycotic-reporting",
+        "tardis-oc-leapxpert",
+        "tardis-oc-arctera",
+        "tardis-oc-messagecounts",
+        "tardis-oc-calendar",
+        "tardis-oc-dailychecks",
+        "tardis-oc-mrl-report-reconciliation"
+      ],
+      "allowedRoles": ["Doctor", "OC Admin", "OC Analyst"]
+    },
+    {
+      "id": "administration",
+      "name": "Administration",
+      "description": "Platform administration including user profile management, system settings, API key management, activity logging, and data reconciliation/refetching tools. Restricted to Doctors (super-admins).",
+      "color": "#f7b84b",
+      "icon": "ri-settings-3-line",
+      "pages": [
+        "tardis-admin-userprofile",
+        "tardis-admin-settings",
+        "tardis-tv-admin-settings",
+        "tardis-oc-admin-settings",
+        "tardis-admin-apikey",
+        "tardis-admin-activity",
+        "tardis-admin-reconciler",
+        "tardis-admin-refetcher"
+      ],
+      "allowedRoles": ["Doctor"]
+    }
+  ],
+  "pages": [
+    {
+      "id": "tardis-tv-main",
+      "title": "Trader Voice Main Dashboard",
+      "path": "/tardis-tv-main",
+      "module": "Tradervoice",
+      "roles": ["Doctor", "TV Admin", "TV Operations"],
+      "description": "The central Trader Voice operations dashboard showing a real-time overview of all TV infrastructure health. Displays server status across all regions, user connection counts by city and country, active alerts, trader version distribution, login activity, and regional performance metrics.",
+      "charts": [
+        {
+          "name": "Users Per Country",
+          "type": "World Map / Donut Chart",
+          "description": "Visualizes the geographic distribution of Trader Voice users across countries. The map highlights countries with active traders; the donut chart shows percentage distribution by region."
+        },
+        {
+          "name": "30-Day Login Users Trend",
+          "type": "Line/Bar Chart",
+          "description": "Shows the daily count of logged-in traders over the past 30 days. Useful for identifying usage trends, unusual spikes, or drops that might indicate systemic issues."
+        },
+        {
+          "name": "Login By Region",
+          "type": "Bar Chart",
+          "description": "Breaks down login counts by geographic region (AMER, EMEA, APAC) to compare regional activity levels."
+        },
+        {
+          "name": "Server Status",
+          "type": "Status Cards",
+          "description": "Color-coded (green/yellow/red) health status cards for all Trader Voice servers grouped by region."
+        }
+      ],
+      "tables": [
+        {
+          "name": "Recent Alerts",
+          "description": "Lists the most recent system alerts across all TV infrastructure, including severity, affected system, message, and timestamp. Helps operations teams quickly identify and respond to incidents."
+        },
+        {
+          "name": "Missing Recordings",
+          "description": "Tables showing connections with missing voice recordings, important for compliance verification."
+        }
+      ],
+      "kpis": [
+        "Total Connected Users",
+        "Active Server Count",
+        "Regional Login Distribution",
+        "Alert Count (Critical/Warning/Info)",
+        "Trader Version Compliance %",
+        "Recent Connection Count by City"
+      ],
+      "workflows": [
+        "Monitor overall system health at a glance",
+        "Identify regions with connectivity issues",
+        "Track trader client version compliance",
+        "Review recent critical alerts"
+      ],
+      "relatedPages": [
+        "tardis-tv-dailychecks",
+        "tardis-tv-analytics",
+        "tardis-tv-servicenow"
+      ]
+    },
+    {
+      "id": "tardis-tv-dailychecks",
+      "title": "TV Daily Checks",
+      "path": "/tardis-tv-dailychecks",
+      "module": "Tradervoice",
+      "roles": ["Doctor", "TV Admin", "TV Operations"],
+      "description": "Structured daily health check workflow for Tradervoice systems. Operations teams run through a comprehensive checklist covering Cloud9 service status, Cohesity connector health, SMS/call tables, shipping lines, IP address impedance, and ServiceNow ticket hygiene for each region (AMER, EMEA, APAC). Checklist completion is tracked and timestamped.",
+      "charts": [
+        {
+          "name": "Cloud9 Service Status",
+          "type": "Status Indicators",
+          "description": "Service-specific health indicators for Cloud9 platform components."
+        }
+      ],
+      "tables": [
+        {
+          "name": "AMER Checklist",
+          "description": "Step-by-step compliance checklist for the Americas region. Each item can be checked off with notes."
+        },
+        {
+          "name": "EMEA Checklist",
+          "description": "Daily checks for Europe, Middle East, and Africa region."
+        },
+        {
+          "name": "APAC Checklist",
+          "description": "Daily checks for Asia-Pacific region."
+        },
+        {
+          "name": "SMS Table",
+          "description": "Current SMS delivery status and counts from the Trader Voice system."
+        },
+        {
+          "name": "Calls Table",
+          "description": "Active and recent call records with status, duration, and participant details."
+        },
+        {
+          "name": "Shipping Lines Table",
+          "description": "Status of dedicated shipping line connections used for high-priority trading communication."
+        }
+      ],
+      "kpis": [
+        "Checklist Completion % by Region",
+        "Open ServiceNow Tickets",
+        "Cloud9 Service Health",
+        "Cohesity Connector Status",
+        "Active Call Count",
+        "SMS Delivery Rate"
+      ],
+      "workflows": [
+        "Complete morning daily check routine",
+        "Verify all regional checklists are signed off",
+        "Identify and escalate any failing health checks",
+        "Log incidents in ServiceNow for failing items"
+      ],
+      "relatedPages": [
+        "tardis-tv-main",
+        "tardis-tv-servicenow",
+        "tardis-tv-cloud9"
+      ]
+    },
+    {
+      "id": "tardis-tv-accsys",
+      "title": "AccSys — Trader Voice MRL Console",
+      "path": "/tardis-tv-accsys",
+      "module": "Tradervoice",
+      "roles": ["Doctor", "TV Admin", "TV Operations"],
+      "description": "The AccSys page for Trader Voice tracks Must Record List (MRLs) for traders. An MRL is a regulatory requirement that permits a trader to use mobile voice channels. This page shows which traders have active MRLs, which are pending approval, who is currently on block leave, and a geographic breakdown of MRLs by office location. Navigate here to check active MRL counts, pending MRLs, or to investigate specific traders. The sidebar label is 'AccSys' under the Trader Voice menu.",
+      "kpis": [
+        "MRL Quick Check — overall RAG status (Red/Amber/Green) indicating whether MRL data is healthy",
+        "Total Users — total number of traders in the AccSys system",
+        "Active MRLs — count of traders with a currently active Mobile Recording Licence",
+        "Pending MRLs — count of traders whose MRL application is awaiting approval"
+      ],
+      "tables": [
+        {
+          "name": "Active MRL Table",
+          "description": "Full list of traders with active MRLs. Columns include: NTID, Last Name, First Name, Email, Block Leave status, Country, City, Building, GRBU (business unit), MRL Status, Mobile Number, CHNL ACC NAME, MVOICE, TVOICE, VOICE."
+        },
+        {
+          "name": "Pending MRL Table",
+          "description": "Traders whose MRL is submitted but not yet approved. Requires follow-up with the approvals team."
+        },
+        {
+          "name": "Block Leave In Progress Table",
+          "description": "Traders currently on block leave. Recording obligations are paused during block leave."
+        }
+      ],
+      "charts": [
+        {
+          "name": "MRLs By Location",
+          "description": "Progress bars showing MRL coverage per office location."
+        },
+        {
+          "name": "Service Coverage Map",
+          "description": "Geographic map showing which regions have active MRL coverage."
+        },
+        {
+          "name": "Total Channel Count",
+          "description": "Breakdown of MVOICE, TVOICE, and VOICE channel assignments across the trader population."
+        }
+      ],
+      "workflows": [
+        "Check how many traders have active MRLs",
+        "Review pending MRL approvals",
+        "Identify traders on block leave",
+        "Review MRL coverage by office location"
+      ],
+      "relatedPages": [
+        "tardis-tv-main",
+        "tardis-tv-reconciliation",
+        "tardis-oc-accsys"
+      ]
+    },
+    {
+      "id": "tardis-tv-servicenow",
+      "title": "TV ServiceNow Dashboard",
+      "path": "/tardis-tv-servicenow",
+      "module": "Tradervoice",
+      "roles": ["Doctor", "TV Admin", "TV Operations"],
+      "description": "Integration dashboard showing ServiceNow ITSM data for Trader Voice. Displays open incidents, change requests, problem records, and SLA compliance metrics directly from the ServiceNow platform relevant to TV infrastructure.",
+      "charts": [
+        {
+          "name": "Incident Trend by Priority",
+          "type": "Bar/Line Chart",
+          "description": "Shows the volume of P1/P2/P3 incidents over time for TV systems."
+        },
+        {
+          "name": "SLA Compliance",
+          "type": "Gauge/Donut Chart",
+          "description": "Displays percentage of incidents resolved within SLA targets."
+        }
+      ],
+      "tables": [
+        {
+          "name": "Open Incidents",
+          "description": "Active ServiceNow incidents related to Trader Voice infrastructure, with priority, assignment, and age."
+        },
+        {
+          "name": "Recent Changes",
+          "description": "Recent change requests that may affect TV systems."
+        }
+      ],
+      "kpis": [
+        "P1/P2 Open Incident Count",
+        "SLA Breach Rate",
+        "MTTR (Mean Time to Resolve)",
+        "Open Change Requests"
+      ],
+      "workflows": [
+        "Review open critical incidents",
+        "Check SLA compliance status",
+        "Cross-reference with system alerts"
+      ],
+      "relatedPages": ["tardis-tv-main", "mrl-incident"]
+    },
+    {
+      "id": "tardis-tv-cloud9",
+      "title": "Cloud9 Monitoring",
+      "path": "/tardis-tv-cloud9",
+      "module": "Tradervoice",
+      "roles": ["Doctor", "TV Admin", "TV Operations"],
+      "description": "Monitors the Cloud9 trading communication platform — a cloud-based telephony solution used by traders. Shows user activity, session counts, call quality metrics, service availability, and connection health by region.",
+      "charts": [
+        {
+          "name": "Cloud9 Session Count",
+          "type": "Line Chart",
+          "description": "Real-time and historical count of active Cloud9 sessions."
+        },
+        {
+          "name": "Regional Distribution",
+          "type": "Donut Chart",
+          "description": "Breakdown of Cloud9 users across AMER, EMEA, and APAC."
+        }
+      ],
+      "tables": [
+        {
+          "name": "Active Sessions",
+          "description": "Current active Cloud9 user sessions with username, region, duration, and quality indicators."
+        }
+      ],
+      "kpis": [
+        "Total Active Sessions",
+        "Session Quality Score",
+        "Uptime %",
+        "Regional Session Distribution"
+      ],
+      "workflows": [
+        "Monitor Cloud9 platform health",
+        "Investigate session quality degradation",
+        "Track usage trends by region"
+      ],
+      "relatedPages": [
+        "tardis-tv-main",
+        "tardis-tv-cloud9billing",
+        "tardis-tv-dailychecks"
+      ]
+    },
+    {
+      "id": "tardis-tv-voiceinsights",
+      "title": "ASC Voice Insights",
+      "path": "/tardis-tv-voiceinsights",
+      "module": "Tradervoice",
+      "roles": ["Doctor", "TV Admin", "TV Operations"],
+      "description": "Analytics and insights from the ASC voice recording platform that records MS Teams Voice calls. Shows recording capture rates, storage utilization, call analytics, compliance coverage metrics, and recording quality data. Essential for demonstrating regulatory recording compliance.",
+      "charts": [
+        {
+          "name": "Recording Capture Rate",
+          "type": "Line Chart",
+          "description": "Percentage of required calls that were successfully recorded over time."
+        },
+        {
+          "name": "Storage Utilization",
+          "type": "Bar/Area Chart",
+          "description": "Voice recording storage consumption trends."
+        }
+      ],
+      "kpis": [
+        "Recording Compliance %",
+        "Total Recordings Today",
+        "Storage Utilization",
+        "Failed Recordings Count",
+        "Archive Success Rate"
+      ],
+      "relatedPages": ["tardis-tv-main", "tardis-tv-cohesityasp"]
+    },
+    {
+      "id": "tardis-tv-twilio",
+      "title": "Twilio Dashboard",
+      "path": "/tardis-tv-twilio",
+      "module": "Tradervoice",
+      "roles": ["Doctor", "TV Admin", "TV Operations"],
+      "description": "Monitors Twilio communication services integrated with the Trader Voice platform. Tracks SMS delivery rates, call completion rates, error logs, cost metrics, and usage patterns across Twilio numbers and services.",
+      "kpis": [
+        "SMS Delivery Rate",
+        "Call Completion Rate",
+        "Error Rate",
+        "Monthly Usage Cost",
+        "Active Phone Numbers"
+      ],
+      "relatedPages": ["tardis-tv-main", "tardis-tv-telemessage"]
+    },
+    {
+      "id": "tardis-tv-cohesityasp",
+      "title": "Cohesity ASP",
+      "path": "/tardis-tv-cohesityasp",
+      "module": "Tradervoice",
+      "roles": ["Doctor", "TV Admin", "TV Operations"],
+      "description": "Monitoring dashboard for Cohesity ASP (Alta Storage Protection) — the backup and archiving infrastructure for voice recordings. Shows backup job status, archive health, recovery point objectives (RPO), and storage capacity.",
+      "kpis": [
+        "Backup Success Rate",
+        "Storage Capacity Used",
+        "RPO Compliance",
+        "Failed Backup Jobs",
+        "Archive Retrieval Time"
+      ],
+      "relatedPages": ["tardis-tv-voiceinsights"]
+    },
+    {
+      "id": "tardis-tv-activity",
+      "title": "TV Activity Log",
+      "path": "/tardis-tv-activity",
+      "module": "Tradervoice",
+      "roles": ["Doctor", "TV Admin", "TV Operations"],
+      "description": "Comprehensive activity log for all Trader Voice module events and user actions. Allows operations teams to audit changes, track who did what, and investigate historical incidents. Supports filtering by date range, user, action type, and severity.",
+      "tables": [
+        {
+          "name": "Activity Log Table",
+          "description": "Chronological log of all TV platform activities including user actions, system events, and automated jobs. Columns include timestamp, user, action, target, status, and notes."
+        }
+      ],
+      "kpis": [
+        "Activities Today",
+        "Critical Events Count",
+        "Unique Users Active"
+      ],
+      "workflows": [
+        "Audit user actions on the TV platform",
+        "Add new activity entries",
+        "Review historical activity for incident investigation"
+      ],
+      "relatedPages": ["tardis-admin-activity"]
+    },
+    {
+      "id": "tardis-tv-analytics",
+      "title": "TV Analytics Dashboard",
+      "path": "/tardis-tv-analytics",
+      "module": "Tradervoice",
+      "roles": ["Doctor", "TV Admin", "TV Operations"],
+      "description": "Advanced analytics dashboard for Trader Voice platform performance. Provides deep-dive metrics, trend analysis, comparative analytics across regions and time periods, and exportable reports for management reporting.",
+      "charts": [
+        {
+          "name": "Long-term Trend Charts",
+          "type": "Multi-line Chart",
+          "description": "Historical trend lines for key TV metrics over weeks/months."
+        },
+        {
+          "name": "Regional Comparison",
+          "type": "Grouped Bar Chart",
+          "description": "Side-by-side comparison of metrics across AMER, EMEA, and APAC."
+        }
+      ],
+      "kpis": [
+        "Weekly Active Users",
+        "Monthly Recording Volume",
+        "Regional Capacity Utilization",
+        "Incident Frequency Trend"
+      ],
+      "relatedPages": ["tardis-tv-main", "tardis-tv-tools"]
+    },
+    {
+      "id": "tardis-tv-tools",
+      "title": "TV Tools",
+      "path": "/tardis-tv-tools",
+      "module": "Tradervoice",
+      "roles": ["Doctor", "TV Admin", "TV Operations"],
+      "description": "Utility tools for Trader Voice operations. Includes diagnostic tools, bulk operations, data export utilities, manual trigger functions, and operational shortcuts to streamline common TV management tasks.",
+      "workflows": [
+        "Run diagnostics on TV components",
+        "Export reports and data sets",
+        "Execute manual operational triggers"
+      ],
+      "relatedPages": ["tardis-tv-analytics"]
+    },
+    {
+      "id": "tardis-tv-telemessage",
+      "title": "TeleMessage",
+      "path": "/tardis-tv-telemessage",
+      "module": "Tradervoice",
+      "roles": ["Doctor"],
+      "description": "[DEPRICATED] Monitors TeleMessage — a secure mobile messaging and call archiving service used for regulatory compliance. Tracks message capture rates, user enrollment, archiving status, and compliance reporting. Restricted to Doctor role only.",
+      "kpis": [
+        "Message Capture Rate",
+        "Enrolled Users",
+        "Archive Success Rate",
+        "Compliance Coverage %"
+      ],
+      "relatedPages": ["tardis-oc-telemessage", "tardis-tv-voiceinsights"]
+    },
+    {
+      "id": "tardis-tv-cloud9billing",
+      "title": "Cloud9 Billing",
+      "path": "/tardis-tv-cloud9billing",
+      "module": "Tradervoice",
+      "roles": ["Doctor", "TV Admin", "TV Operations"],
+      "description": "Billing and cost management dashboard for Cloud9 services. Shows monthly costs, per-user billing, cost trends, budget vs actual comparisons, and billing anomaly detection.",
+      "charts": [
+        {
+          "name": "Monthly Cost Trend",
+          "type": "Area Chart",
+          "description": "Month-over-month Cloud9 billing trends."
+        },
+        {
+          "name": "Cost Breakdown",
+          "type": "Donut/Pie Chart",
+          "description": "Cost distribution by service type, region, and user segment."
+        }
+      ],
+      "kpis": [
+        "Current Month Cost",
+        "Cost Per User",
+        "Month-over-Month Change %",
+        "Budget Utilization %"
+      ],
+      "relatedPages": ["tardis-tv-cloud9"]
+    },
+    {
+      "id": "mrl-incident",
+      "title": "MRL Incident / Service Entry Reporting",
+      "path": "/mrl-incident",
+      "module": "Tradervoice",
+      "roles": ["Doctor", "TV Admin", "TV Operations"],
+      "description": "Service Entry Reporting (SER) dashboard for MRL (Maintenance Request Log) incidents. Teams log, track, and manage maintenance requests and service entries. Supports creating new entries, viewing status progression, and generating compliance reports.",
+      "tables": [
+        {
+          "name": "Service Entries Table",
+          "description": "All MRL service entries with columns for entry ID, description, requester, status (Open/In-Progress/Closed), priority, dates, and resolution notes."
+        }
+      ],
+      "workflows": [
+        "Log new maintenance/service requests",
+        "Update status of existing entries",
+        "Generate monthly MRL compliance reports"
+      ],
+      "relatedPages": ["mrl-report-reconciliation", "tardis-tv-servicenow"]
+    },
+    {
+      "id": "maintenanceCalendar",
+      "title": "Maintenance Calendar",
+      "path": "/maintenanceCalendar",
+      "module": "Tradervoice",
+      "roles": ["Doctor", "TV Admin", "TV Operations"],
+      "description": "Calendar view of all planned and completed maintenance windows, outages, and change activities. Allows teams to schedule maintenance, avoid conflicts, and communicate planned downtime to stakeholders.",
+      "workflows": [
+        "Schedule new maintenance windows",
+        "View upcoming planned outages",
+        "Review completed maintenance history"
+      ],
+      "relatedPages": ["mrl-incident", "tardis-tv-servicenow"]
+    },
+    {
+      "id": "dubber",
+      "title": "Dubber Call Recording",
+      "path": "/dubber",
+      "module": "Tradervoice",
+      "roles": ["Doctor", "TV Admin", "TV Operations"],
+      "description": "Monitoring dashboard for Dubber — a cloud-based call recording and voice intelligence platform. Tracks recording capture compliance, playback access, storage, transcription accuracy, and user enrollment.",
+      "kpis": [
+        "Recording Compliance %",
+        "Active Recorders",
+        "Storage Usage",
+        "Failed Recordings"
+      ],
+      "relatedPages": ["tardis-tv-voiceinsights", "tardis-tv-cohesityasp"]
+    },
+    {
+      "id": "tardis-tv-leapxpert",
+      "title": "Leapxpert (Global)",
+      "path": "/tardis-tv-leapxpert",
+      "module": "Tradervoice",
+      "roles": ["Doctor", "TV Admin", "TV Operations"],
+      "description": "Monitors Leapxpert — a compliant messaging and communication capture platform for financial services. Tracks message capture rates, user enrollment, channel coverage for SMS and iMessage, and archiving compliance globally.",
+      "kpis": [
+        "Message Capture Rate",
+        "Enrolled Users",
+        "Channel Coverage",
+        "Archive Compliance %"
+      ],
+      "relatedPages": [
+        "tardis-tv-leapxpertSgp",
+        "tardis-tv-leapxpertEmea",
+        "tardis-oc-leapxpert"
+      ]
+    },
+    {
+      "id": "tardis-tv-leapxpertSgp",
+      "title": "Leapxpert Singapore",
+      "path": "/tardis-tv-leapxpertSgp",
+      "module": "Tradervoice",
+      "roles": ["Doctor", "TV Admin", "TV Operations"],
+      "description": "Singapore-specific Leapxpert monitoring dashboard. Focuses on SGP regional message compliance for SMS and iMessage, local user enrollment, and archiving status.",
+      "relatedPages": ["tardis-tv-leapxpert", "tardis-tv-leapxpertEmea"]
+    },
+    {
+      "id": "tardis-tv-leapxpertEmea",
+      "title": "Leapxpert EMEA",
+      "path": "/tardis-tv-leapxpertEmea",
+      "module": "Tradervoice",
+      "roles": ["Doctor", "TV Admin", "TV Operations"],
+      "description": "EMEA (Europe, Middle East, Africa) regional Leapxpert monitoring. Tracks GDPR-compliant archiving, EMEA user enrollment, and regional SMS and iMessage capture compliance.",
+      "relatedPages": ["tardis-tv-leapxpert", "tardis-tv-leapxpertSgp"]
+    },
+    {
+      "id": "tardis-tv-getec",
+      "title": "GETEC Monitoring",
+      "path": "/tardis-tv-getec",
+      "module": "Tradervoice",
+      "roles": ["Doctor", "TV Admin", "TV GETEC"],
+      "description": "Monitoring dashboard dedicated to GETEC technology systems integrated with Trader Voice. Provides health metrics, connection status, and operational data for GETEC components.",
+      "relatedPages": ["tardis-tv-main"]
+    },
+    {
+      "id": "tardis-tv-reconciliation",
+      "title": "TV Reconciliation",
+      "path": "/tardis-tv-reconciliation",
+      "module": "Tradervoice",
+      "roles": ["Doctor", "TV Admin", "TV Operations"],
+      "description": "Data reconciliation dashboard for Trader Voice that identifies discrepancies between various data sources — AccSys, Cloud9, ASC, and the TARDIS platform. Flags mismatches and provides resolution workflows.",
+      "tables": [
+        {
+          "name": "Discrepancy Report",
+          "description": "Lists data mismatches between TV platform data sources, with severity classification and recommended resolution steps."
+        }
+      ],
+      "workflows": [
+        "Identify data mismatches between systems",
+        "Initiate data reconciliation jobs",
+        "Export reconciliation reports"
+      ],
+      "relatedPages": ["tardis-tv-accsys", "tardis-admin-reconciler"]
+    },
+    {
+      "id": "tardis-tv-voicecounts",
+      "title": "TV Voice Counts",
+      "path": "/tardis-tv-voicecounts",
+      "module": "Tradervoice",
+      "roles": ["Doctor", "TV Admin", "TV Operations"],
+      "description": "Detailed voice usage count tracking dashboard. Shows real-time and historical counts of voice sessions, calls, active handsets, and licensed seats vs actual usage to support capacity planning and licensing compliance.",
+      "charts": [
+        {
+          "name": "Voice Count Trend",
+          "type": "Line Chart",
+          "description": "Historical trend of voice handset and session counts over time."
+        }
+      ],
+      "kpis": [
+        "Active Handsets",
+        "Total Licensed Seats",
+        "License Utilization %",
+        "Peak Concurrent Sessions"
+      ],
+      "relatedPages": ["tardis-tv-main", "tardis-tv-cloud9"]
+    },
+    {
+      "id": "mrl-report-reconciliation",
+      "title": "MRL Report & Reconciliation",
+      "path": "/mrl-report-reconciliation",
+      "module": "Tradervoice",
+      "roles": ["Doctor", "TV Admin", "TV Operations"],
+      "description": "Combined reporting and reconciliation dashboard for MRL (Must Record List) data. Provides summary reports, trend analysis, and data reconciliation between MRL entries and actual service records.",
+      "relatedPages": ["mrl-incident", "tardis-tv-reconciliation"]
+    },
+    {
+      "id": "tardis-oc-main",
+      "title": "OpsCompliance Main Dashboard",
+      "path": "/tardis-oc-main",
+      "module": "OpsCompliance",
+      "roles": ["Doctor", "OC Admin", "OC Analyst"],
+      "description": "Central OpsCompliance operations overview. Displays compliance health scores, recording coverage metrics, system status across compliance tools (MS Teams ASC, Cohesity, Leapxpert, Arctera), and critical compliance alerts requiring immediate attention.",
+      "charts": [
+        {
+          "name": "Compliance Coverage Score",
+          "type": "Gauge Chart",
+          "description": "Overall compliance coverage percentage across all monitored communication channels."
+        },
+        {
+          "name": "Recording Status by System",
+          "type": "Stacked Bar Chart",
+          "description": "Recording success/failure breakdown per compliance system."
+        }
+      ],
+      "kpis": [
+        "Overall Compliance Score",
+        "Active Recording Systems",
+        "Coverage Gap Count",
+        "Open Compliance Alerts"
+      ],
+      "relatedPages": [
+        "tardis-oc-dailychecks",
+        "tardis-oc-servicenow",
+        "tardis-oc-messagecounts"
+      ]
+    },
+    {
+      "id": "tardis-oc-accsys",
+      "title": "AccSys — Ops Compliance MRL Console",
+      "path": "/tardis-oc-accsys",
+      "module": "OpsCompliance",
+      "roles": ["Doctor", "OC Admin", "OC Analyst"],
+      "description": "The AccSys page for Ops Compliance tracks Mobile Recording Licences (MRLs) for the compliance-monitored user population. Similar to the TV AccSys page but scoped to OC-managed staff. Shows active MRLs, pending MRLs, temporary MRLs, block leave status, joiners and movers, and leavers. Also includes a Consolidated Non-MRL User Access view for users who have voice channel access without a valid MRL — a compliance risk. The sidebar label is 'AccSys' under the Ops Compliance menu.",
+      "kpis": [
+        "Overall MRL Stats — summary of active, pending, and temporary MRL counts for the OC user population"
+      ],
+      "tables": [
+        {
+          "name": "Active MRL Table",
+          "description": "Users with a currently active MRL under Ops Compliance."
+        },
+        {
+          "name": "Pending MRL Table",
+          "description": "Users awaiting MRL approval."
+        },
+        {
+          "name": "AC Temp MRL Table",
+          "description": "Users on a temporary MRL — issued under exceptional circumstances pending full approval."
+        },
+        {
+          "name": "Block Leave In Progress",
+          "description": "OC users currently on block leave."
+        },
+        {
+          "name": "Consolidated Non-MRL User Access",
+          "description": "Users who have voice channel access but no valid MRL. This is a compliance risk and requires remediation."
+        },
+        {
+          "name": "Joiner & Movers Table",
+          "description": "New joiners and staff who changed role or desk — MRL action may be required."
+        },
+        {
+          "name": "Leavers Table",
+          "description": "Staff who have left — tracks MRL deactivation and regulatory data retention requirements."
+        }
+      ],
+      "workflows": [
+        "Review active and pending MRLs for OC staff",
+        "Identify non-MRL users with voice access (compliance risk)",
+        "Process MRL actions for joiners, movers, and leavers"
+      ],
+      "relatedPages": ["tardis-oc-main", "tardis-tv-accsys"]
+    },
+    {
+      "id": "tardis-oc-servicenow",
+      "title": "OC ServiceNow",
+      "path": "/tardis-oc-servicenow",
+      "module": "OpsCompliance",
+      "roles": ["Doctor", "OC Admin", "OC Analyst"],
+      "description": "ServiceNow integration for Ops Compliance showing compliance-related incidents, change requests, and problem records. Focuses on compliance system outages, remediation tasks, and regulatory-related tickets.",
+      "relatedPages": ["tardis-oc-main", "tardis-tv-servicenow"]
+    },
+    {
+      "id": "tardis-oc-msteamsasc",
+      "title": "MS Teams ASC Monitoring",
+      "path": "/tardis-oc-msteamsasc",
+      "module": "OpsCompliance",
+      "roles": ["Doctor", "OC Admin", "OC Analyst"],
+      "description": "Monitors Microsoft Teams call and meeting recording via the ASC platform. Tracks capture rates for MS Teams communications, user enrollment status, compliance coverage, and recording quality metrics.",
+      "kpis": [
+        "Teams Recording Coverage %",
+        "Enrolled Users",
+        "Failed Captures Count",
+        "Storage Usage"
+      ],
+      "relatedPages": ["tardis-oc-main", "tardis-oc-messagecounts"]
+    },
+    {
+      "id": "tardis-oc-veritasmerge",
+      "title": "Arctera Merge1",
+      "path": "/tardis-oc-veritasmerge",
+      "module": "OpsCompliance",
+      "roles": ["Doctor", "OC Admin", "OC Analyst"],
+      "description": "Tracks the Arctera archiving platform's Merge1 and consolidation operations. Monitors email and communication archive merges, data integrity checks, deduplication rates, and archive health.",
+      "relatedPages": ["tardis-oc-main", "tardis-oc-arctera"]
+    },
+    {
+      "id": "tardis-oc-telemessage",
+      "title": "OC TeleMessage",
+      "path": "/tardis-oc-telemessage",
+      "module": "OpsCompliance",
+      "roles": ["Doctor"],
+      "description": "Ops Compliance view of TeleMessage archiving. Doctor-only access. Tracks secure mobile message compliance capture rates and archiving status for OC-managed users.",
+      "relatedPages": ["tardis-tv-telemessage", "tardis-oc-messagecounts"]
+    },
+    {
+      "id": "tardis-oc-activity",
+      "title": "OC Activity Log",
+      "path": "/tardis-oc-activity",
+      "module": "OpsCompliance",
+      "roles": ["Doctor", "OC Admin", "OC Analyst"],
+      "description": "Activity log for all Ops Compliance module events. Records changes, workflow completions, alert responses, and user actions within the OC module for audit and compliance purposes.",
+      "relatedPages": ["tardis-admin-activity", "tardis-tv-activity"]
+    },
+    {
+      "id": "mobile-device-mgt",
+      "title": "Mobile Device Management",
+      "path": "/mobile-device-mgt",
+      "module": "OpsCompliance",
+      "roles": ["Doctor", "OC Admin", "OC Analyst"],
+      "description": "MDM dashboard showing enrolled mobile devices, compliance status, policy enforcement, application management, and device health. Critical for tracking trader mobile devices used for compliant communication.",
+      "tables": [
+        {
+          "name": "Device Inventory",
+          "description": "All enrolled mobile devices with owner, OS version, compliance status, last check-in time, and policy compliance indicators."
+        }
+      ],
+      "kpis": [
+        "Enrolled Devices",
+        "Compliant Devices %",
+        "Non-Compliant Devices",
+        "Pending Enrollment"
+      ],
+      "relatedPages": ["tardis-oc-main"]
+    },
+    {
+      "id": "thycotic-reporting",
+      "title": "Thycotic Device Status",
+      "path": "/thycotic-reporting",
+      "module": "OpsCompliance",
+      "roles": ["Doctor", "OC Admin", "OC Analyst"],
+      "description": "Intune reporting of MRL user device details and the installation status of Thycotic on those devices. Some users may have multiple devices. Displays a paginated table of all enrolled devices showing Device Name, UPN (user email), Device Platform (e.g. Windows 10), App Version, Installation Status (Installed / Not Installed / Failed / Pending), Intune Device ID, and Last Modified Time. Separate summary cards show total device count and installation status breakdown across all devices.",
+      "tables": [
+        {
+          "name": "Thycotic Device Status Table",
+          "description": "Paginated list of all MRL user devices reported via Intune. Columns: Device Name, UPN, Device Platform, App Version, Status (Installed / Not Installed / Install Pending / Failed), Intune Device ID, Last Modified Time. Supports search by device name or UPN and configurable page size (10/20/30/50/100). Exportable to CSV."
+        }
+      ],
+      "kpis": [
+        "Total Device Count",
+        "Installed Count",
+        "Not Installed Count",
+        "Install Pending Count",
+        "Failed Count"
+      ],
+      "workflows": [
+        "Search for a specific device or user by UPN in the search box",
+        "Change page size using the Show dropdown to see more results at once",
+        "Export the full device list to CSV using the Export CSV button",
+        "Use the installation status column to identify devices where Thycotic is not yet installed or has failed"
+      ],
+      "faqs": [
+        {
+          "question": "What does the Thycotic Device Status page show?",
+          "answer": "It shows Intune-reported device records for MRL users, including whether the Thycotic application is installed on each device. One user can appear multiple times if they have multiple enrolled devices."
+        },
+        {
+          "question": "Why does a user appear more than once?",
+          "answer": "Some MRL users have multiple enrolled devices (e.g. a desktop and a laptop). Each device is listed as a separate row."
+        }
+      ],
+      "relatedPages": ["tardis-oc-main", "tardis-admin-settings"]
+    },
+    {
+      "id": "tardis-oc-leapxpert",
+      "title": "OC Leapxpert",
+      "path": "/tardis-oc-leapxpert",
+      "module": "OpsCompliance",
+      "roles": ["Doctor", "OC Admin", "OC Analyst"],
+      "description": "Ops Compliance view of Leapxpert compliant messaging. Tracks OC-specific user enrollment, message archiving compliance, and channel coverage for OpsCompliance team users.",
+      "relatedPages": ["tardis-tv-leapxpert", "tardis-oc-messagecounts"]
+    },
+    {
+      "id": "tardis-oc-arctera",
+      "title": "Arctera Monitoring",
+      "path": "/tardis-oc-arctera",
+      "module": "OpsCompliance",
+      "roles": ["Doctor", "OC Admin", "OC Analyst"],
+      "description": "Monitors the Arctera (formerly Veritas Enterprise Vault) archiving platform. Tracks archive health, retention policy compliance, data growth, and retrieval performance for communications archiving.",
+      "kpis": [
+        "Archive Health Score",
+        "Retention Compliance %",
+        "Archive Storage Growth",
+        "Retrieval SLA Compliance"
+      ],
+      "relatedPages": ["tardis-oc-veritasmerge", "tardis-oc-main"]
+    },
+    {
+      "id": "tardis-oc-messagecounts",
+      "title": "OC Message Counts",
+      "path": "/tardis-oc-messagecounts",
+      "module": "OpsCompliance",
+      "roles": ["Doctor", "OC Admin"],
+      "description": "Detailed message count analytics across all compliance-monitored communication channels. Shows volume trends by channel (voice, email, instant messaging, mobile), compliance coverage, and identifies gaps in message capture.",
+      "charts": [
+        {
+          "name": "Message Volume by Channel",
+          "type": "Stacked Bar Chart",
+          "description": "Daily/weekly message volumes broken down by channel type."
+        }
+      ],
+      "kpis": [
+        "Total Messages Captured",
+        "Capture Rate by Channel",
+        "Volume Trend Change %",
+        "Uncaptured Message Estimate"
+      ],
+      "relatedPages": ["tardis-oc-main", "tardis-oc-msteamsasc"]
+    },
+    {
+      "id": "tardis-oc-calendar",
+      "title": "OC Calendar",
+      "path": "/tardis-oc-calendar",
+      "module": "OpsCompliance",
+      "roles": ["Doctor", "OC Admin", "OC Analyst"],
+      "description": "Compliance calendar showing scheduled compliance reviews, regulatory deadlines, audit dates, system maintenance windows, and recurring OC tasks with deadline tracking.",
+      "relatedPages": ["tardis-oc-main", "maintenanceCalendar"]
+    },
+    {
+      "id": "tardis-oc-dailychecks",
+      "title": "OC Daily Checks",
+      "path": "/tardis-oc-dailychecks",
+      "module": "OpsCompliance",
+      "roles": ["Doctor", "OC Admin", "OC Analyst"],
+      "description": "Daily compliance health check workflow for the OpsCompliance team. Structured checklist covering all compliance system health checks, archiving status reviews, and compliance metric verification.",
+      "relatedPages": ["tardis-oc-main", "tardis-tv-dailychecks"]
+    },
+    {
+      "id": "tardis-oc-mrl-report-reconciliation",
+      "title": "OC MRL Report & Reconciliation",
+      "path": "/tardis-oc-mrl-report-reconciliation",
+      "module": "OpsCompliance",
+      "roles": ["Doctor", "OC Admin", "OC Analyst"],
+      "description": "MRL report and reconciliation specifically for OpsCompliance. Generates compliance-focused MRL reports and reconciles OC data sources.",
+      "relatedPages": ["mrl-report-reconciliation", "tardis-oc-main"]
+    },
+    {
+      "id": "tardis-admin-userprofile",
+      "title": "User Profile Management",
+      "path": "/tardis-admin-userprofile",
+      "module": "Administration",
+      "roles": ["Doctor"],
+      "description": "User management interface for all TARDIS platform users. Allows creating, editing, deactivating user accounts, assigning roles, and managing user permissions. Full CRUD operations on user profiles.",
+      "tables": [
+        {
+          "name": "User Directory",
+          "description": "Complete list of all TARDIS users with name, email, role, status (active/inactive), and last login. Supports search and filtering."
+        }
+      ],
+      "workflows": [
+        "Create new user accounts",
+        "Edit existing user roles and details",
+        "Deactivate/reactivate users",
+        "Assign module-specific roles"
+      ],
+      "relatedPages": ["tardis-admin-settings"]
+    },
+    {
+      "id": "tardis-admin-settings",
+      "title": "Admin Global Settings",
+      "path": "/tardis-admin-settings",
+      "module": "Administration",
+      "roles": ["Doctor"],
+      "description": "Global platform settings including system configuration, integration credentials, notification settings, alert thresholds, data retention policies, and application-wide preferences.",
+      "relatedPages": ["tardis-tv-admin-settings", "tardis-oc-admin-settings"]
+    },
+    {
+      "id": "tardis-tv-admin-settings",
+      "title": "TV Admin Settings",
+      "path": "/tardis-tv-admin-settings",
+      "module": "Administration",
+      "roles": ["Doctor", "TV Admin"],
+      "description": "Trader Voice module-specific administrative settings. Configure TV integration endpoints, alert thresholds, notification rules, and TV-specific operational parameters.",
+      "relatedPages": ["tardis-admin-settings"]
+    },
+    {
+      "id": "tardis-oc-admin-settings",
+      "title": "OC Admin Settings",
+      "path": "/tardis-oc-admin-settings",
+      "module": "Administration",
+      "roles": ["Doctor", "OC Admin"],
+      "description": "OpsCompliance module-specific administrative settings. Configure OC integration endpoints, compliance thresholds, archiving rules, and OC-specific operational parameters.",
+      "relatedPages": ["tardis-admin-settings"]
+    },
+    {
+      "id": "tardis-admin-apikey",
+      "title": "API Key Management",
+      "path": "/tardis-admin-apikey",
+      "module": "Administration",
+      "roles": ["Doctor"],
+      "description": "Manage API keys for TARDIS platform integrations. Create, rotate, revoke, and monitor API keys used by external services and integrations to authenticate with the TARDIS backend.",
+      "tables": [
+        {
+          "name": "API Keys Table",
+          "description": "All active/inactive API keys with name, permissions scope, creation date, last used, and expiry."
+        }
+      ],
+      "workflows": [
+        "Generate new API keys for integrations",
+        "Rotate expiring API keys",
+        "Revoke compromised API keys",
+        "Review API key usage logs"
+      ],
+      "relatedPages": ["tardis-admin-settings"]
+    },
+    {
+      "id": "tardis-admin-activity",
+      "title": "Admin Activity Log",
+      "path": "/tardis-admin-activity",
+      "module": "Administration",
+      "roles": ["Doctor"],
+      "description": "Comprehensive platform-wide activity audit log. Records all administrative actions including user management changes, settings updates, API key operations, and system configuration changes.",
+      "relatedPages": ["tardis-tv-activity", "tardis-oc-activity"]
+    },
+    {
+      "id": "tardis-admin-reconciler",
+      "title": "Data Reconciler",
+      "path": "/tardis-admin-reconciler",
+      "module": "Administration",
+      "roles": ["Doctor"],
+      "description": "System data reconciliation tool that compares and synchronizes data between TARDIS and its upstream data sources. Identifies discrepancies, runs automated reconciliation jobs, and produces reconciliation reports.",
+      "workflows": [
+        "Trigger manual reconciliation run",
+        "Review reconciliation job history",
+        "Resolve data discrepancy flagged items"
+      ],
+      "relatedPages": ["tardis-tv-reconciliation", "tardis-admin-refetcher"]
+    },
+    {
+      "id": "tardis-admin-refetcher",
+      "title": "Data Refetcher",
+      "path": "/tardis-admin-refetcher",
+      "module": "Administration",
+      "roles": ["Doctor"],
+      "description": "Tool to re-fetch and refresh data from external sources when cached or stored data may be stale. Allows targeted re-pull of specific data sets without full system refresh.",
+      "workflows": [
+        "Re-fetch specific API data",
+        "Clear and refresh data caches",
+        "Schedule automatic refetch jobs"
+      ],
+      "relatedPages": ["tardis-admin-reconciler"]
+    }
+  ],
+  "navigation": {
+    "description": "TARDIS uses role-based navigation. The sidebar shows only modules the current user has access to.",
+    "quickRoutes": {
+      "tv_dashboard": "/tardis-tv-main",
+      "oc_dashboard": "/tardis-oc-main",
+      "user_management": "/tardis-admin-userprofile",
+      "api_keys": "/tardis-admin-apikey",
+      "tv_analytics": "/tardis-tv-analytics",
+      "tv_daily_checks": "/tardis-tv-dailychecks",
+      "oc_daily_checks": "/tardis-oc-dailychecks",
+      "maintenance_calendar": "/maintenanceCalendar",
+      "mrl_incidents": "/mrl-incident",
+      "servicenow_tv": "/tardis-tv-servicenow",
+      "servicenow_oc": "/tardis-oc-servicenow",
+      "admin_settings": "/tardis-admin-settings",
+      "reconciler": "/tardis-admin-reconciler"
+    }
+  },
+  "commonWorkflows": [
+    {
+      "id": "morning_checks",
+      "title": "Morning Daily Check Routine",
+      "steps": [
+        "1. Open TV Daily Checks (/tardis-tv-dailychecks) - complete AMER/EMEA/APAC checklists",
+        "2. Review TV Main Dashboard (/tardis-tv-main) for overnight alerts",
+        "3. Check ServiceNow (/tardis-tv-servicenow) for new critical incidents",
+        "4. Open OC Daily Checks (/tardis-oc-dailychecks) - complete OC checklist",
+        "5. Verify OC Dashboard (/tardis-oc-main) compliance scores"
+      ]
+    },
+    {
+      "id": "incident_response",
+      "title": "Incident Response Workflow",
+      "steps": [
+        "1. Identify alert on main dashboard",
+        "2. Navigate to affected system dashboard for details",
+        "3. Check ServiceNow for existing incident",
+        "4. Log new MRL incident if needed at /mrl-incident",
+        "5. Update activity log",
+        "6. Escalate if P1/P2"
+      ]
+    },
+    {
+      "id": "user_onboarding",
+      "title": "New User Onboarding",
+      "steps": [
+        "1. Go to User Management (/tardis-admin-userprofile)",
+        "2. Click Add User Profile",
+        "3. Fill in details and assign role",
+        "4. User receives credentials",
+        "5. Verify login access"
+      ]
+    },
+    {
+      "id": "compliance_review",
+      "title": "Compliance Review",
+      "steps": [
+        "1. Check OC Main Dashboard for compliance score",
+        "2. Review Message Counts (/tardis-oc-messagecounts)",
+        "3. Check each recording system coverage",
+        "4. Review Thycotic for PAM compliance",
+        "5. Generate MRL Reconciliation report"
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "question": "How do I check if Cloud9 Voice Recording is working?",
+      "answer": "Navigate to TV Main Dashboard (/tardis-tv-main) to see high-level status of their API endpoints and services, then go to Cloud9 (/tardis-tv-cloud9) for more details and regional specific services."
+    },
+    {
+      "question": "Where do I manage users?",
+      "answer": "Go to User Profile Management at /tardis-admin-userprofile. This requires Doctor (admin) access."
+    },
+    {
+      "question": "How do I see compliance scores?",
+      "answer": "The Ops Compliance Main Dashboard (/tardis-oc-main) shows the overall compliance score. For channel-specific compliance, check Message Counts (/tardis-oc-messagecounts)."
+    },
+    {
+      "question": "Where can I log a new incident or maintenance request?",
+      "answer": "Use the MRL Incident page at /mrl-incident to log service entries and maintenance requests."
+    },
+    {
+      "question": "How do I rotate an API key?",
+      "answer": "Navigate to API Key Management at /tardis-admin-apikey, find the key, and use the rotate/regenerate option. Requires Doctor role."
+    },
+    {
+      "question": "What is the daily check process?",
+      "answer": "Each morning, a predefined ste of tests are completed to assure systems are all working as expected. Trader Voice complete the TV Daily Checks (/tardis-tv-dailychecks) covering AMER, EMEA, and APAC checklists. Ops Compliance also complete a Daily Checks (/tardis-oc-dailychecks) that is completed one time per day and is not region specific."
+    }
+  ]
+}

@@ -10,6 +10,8 @@ import {
   X,
   Search,
   HelpCircle,
+  Maximize2,
+  Minimize2,
 } from "lucide-react";
 import { KEYBOARD_SHORTCUTS } from "./constants";
 import type { View } from "./types";
@@ -18,27 +20,36 @@ interface ChatHeaderProps {
   view: View;
   messageCount: number;
   isSearchOpen: boolean;
+  expanded: boolean;
+  isDragging: boolean;
   onEnquiry: () => void;
   onExport: () => void;
   onReset: () => void;
   onClose: () => void;
   onToggleSearch: () => void;
+  onToggleExpand: () => void;
 }
 
 export function ChatHeader({
   view,
   messageCount,
   isSearchOpen,
+  expanded,
+  isDragging,
   onEnquiry,
   onExport,
   onReset,
   onClose,
   onToggleSearch,
+  onToggleExpand,
 }: ChatHeaderProps) {
   const [showShortcuts, setShowShortcuts] = useState(false);
 
   return (
-    <div className="flex items-center justify-between px-4 py-3 bg-linear-to-r from-indigo-600 to-violet-600 shrink-0 relative">
+    <div
+      data-drag-handle
+      className={`flex items-center justify-between px-4 py-3 bg-linear-to-r from-indigo-600 to-violet-600 shrink-0 relative${isDragging ? " cursor-grabbing" : " cursor-grab"}`}
+    >
       {/* Brand */}
       <div className="flex items-center gap-2.5">
         <div className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center">
@@ -91,6 +102,15 @@ export function ChatHeader({
             <Download size={14} />
           </button>
         )}
+        {/* Expand / collapse panel */}
+        <button
+          onClick={onToggleExpand}
+          aria-label={expanded ? "Collapse chat" : "Expand chat"}
+          title={expanded ? "Restore size" : "Expand chat"}
+          className="p-1.5 rounded-lg hover:bg-white/15 text-white/70 hover:text-white transition-colors duration-150"
+        >
+          {expanded ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
+        </button>
         {/* Keyboard shortcuts ? button */}
         <div className="relative">
           <button
