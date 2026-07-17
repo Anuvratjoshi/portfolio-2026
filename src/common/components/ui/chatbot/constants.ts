@@ -64,6 +64,8 @@ export const LUCKY_QUESTIONS = [
   "How quickly can Anuvrat get up to speed on a new codebase?",
   "Tell me about RentEase - what problem does it solve?",
   "What is RentEase and why is Anuvrat building it?",
+  "What is MyFriendlyDoc and who is it for?",
+  "Tell me about Wizzard in MyFriendlyDoc",
   "Is Anuvrat building his own startup?",
 ];
 

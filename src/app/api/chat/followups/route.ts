@@ -39,6 +39,15 @@ const CATEGORY_KEYWORDS: Record<string, string[]> = {
     "tardis",
     "diibs",
     "antayoga",
+    "myfriendlydoc",
+    "my friendly doc",
+    "friendlydoc",
+    "friendly doc",
+    "wizzard",
+    "markdown",
+    "documentation",
+    "docs",
+    "flowchart",
     "project",
     "built",
     "platform",
@@ -226,10 +235,9 @@ export async function POST(req: NextRequest) {
         .updateOne(
           { sessionId: cleanSessionId },
           {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             $addToSet: {
               shownFollowupIds: { $each: questions.map((q) => q._id) },
-            } as any,
+            },
           },
         )
         .catch(() => {});

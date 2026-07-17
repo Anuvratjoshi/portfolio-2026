@@ -162,6 +162,27 @@ const SEED = [
     text: "What's RentEase's revenue potential at scale?",
     category: "rentease",
   },
+  // myfriendlydoc
+  {
+    text: "What problem does MyFriendlyDoc solve?",
+    category: "projects",
+  },
+  {
+    text: "How does Wizzard improve documentation?",
+    category: "projects",
+  },
+  {
+    text: "What security features does MyFriendlyDoc have?",
+    category: "projects",
+  },
+  {
+    text: "Who is MyFriendlyDoc built for?",
+    category: "projects",
+  },
+  {
+    text: "What makes MyFriendlyDoc different from a basic notes app?",
+    category: "projects",
+  },
   // npm
   { text: "How many npm packages has he published?", category: "npm" },
   {

@@ -126,6 +126,24 @@ Key achievements:
 - Improved user retention by 15% through performance optimizations
 - Secure backend APIs with strict data privacy controls
 
+### MyFriendlyDoc - Markdown Documentation SaaS
+MyFriendlyDoc is Anuvrat's live documentation startup/product: a Markdown-first knowledge workspace for people who write docs, guides, runbooks, notes, and internal playbooks but need them organized, searchable, and safely shareable. It exists because Anuvrat kept losing his own documentation across too many tools, so he built the exact system he wanted.
+Live: https://my-friendly-doc.vercel.app/
+Tech: Next.js, React.js, TypeScript, Tailwind CSS, Markdown editor, AI documentation assistant, secure sharing, autosave, global search
+Key features:
+- Clean project/document structure with unlimited projects and unlimited documents
+- Split-pane Markdown editor with live preview, GFM-style writing, autosave, favorites, recents, trash/restore, and smart archiving
+- Instant global command-palette search so users can find docs and projects quickly
+- Secure project locking with password protection, limited unlock sessions, and automatic re-locking after expiry
+- Read-only protected link sharing for external viewers, including no-login viewing, password checks for locked projects, auto-sync after access, and link regeneration to invalidate older shares
+- Visual flowchart builder inside the editor: users create flowcharts with shapes, connections, waypoints, and insert the diagram directly into the document
+- Dark mode and a clean writing-first UI for developers, writers, and teams
+
+#### Wizzard - AI Documentation Assistant
+Wizzard is the early AI assistant inside MyFriendlyDoc. It opens from the document editor, asks 6 context questions about audience, tone, goals, and content intent, then rewrites raw notes into a clearer AI-polished document. The output can be saved as a brand-new document in the project, so it becomes searchable, editable, and part of the user's real workspace. It currently has a 5-use daily limit because each AI run costs money; Anuvrat is improving prompts, context handling, and model quality weekly.
+
+**Positioning:** MyFriendlyDoc is not just storage. It is a documentation operating space: write in Markdown, organize by project, find anything fast, share safely, visualize flows, and use AI to improve clarity when the first draft is rough.
+
 ## OPEN SOURCE NPM PACKAGES
 
 ### error-intelligence-layer (v0.3.0)
@@ -330,7 +348,7 @@ Anuvrat actively integrates AI into development:
 ### CRITICAL - WHAT COUNTS AS "RELEVANT" vs "OFF-TOPIC"
 
 **RELEVANT (answer normally + brag closer):**
-Questions ABOUT Anuvrat - his skills, projects (TARDIS, DIIBS, ANTAYOGA, RentEase, etc.), experience, work history, hiring availability, contact info, tech stack he uses, how he solved a specific problem on his projects, his open-source npm packages, his startup, his AI workflow, his approach to architecture, why he's a good hire.
+Questions ABOUT Anuvrat - his skills, projects (TARDIS, DIIBS, ANTAYOGA, RentEase, MyFriendlyDoc, etc.), experience, work history, hiring availability, contact info, tech stack he uses, how he solved a specific problem on his projects, his open-source npm packages, his startup, his AI workflow, his approach to architecture, why he's a good hire.
 
 **OFF-TOPIC (witty roast + redirect, NEVER answer):**
 Anything that asks the bot to PERFORM a task instead of describe Anuvrat. Examples that look "developer-y" but are still OFF-TOPIC:
@@ -655,6 +673,13 @@ export async function POST(req: NextRequest) {
       ) {
         focusHint =
           "INTENT: TARDIS AI ASSISTANT DEEP-DIVE. Cover the in-house build: dual-provider (Copilot vs Azure OpenAI), TF-IDF RAG over projectKnowledge.json, regex intent classifier + live data registry running in parallel via Promise.all, Azure function-calling tools (e.g. getRecentAlerts), SSE streaming with non-blocking DB persistence, security model (read-only DB, sanitizer, no PII). Stress: no third-party SDK, no LangChain, no vector DB - built from scratch.";
+      } else if (
+        /myfriendlydoc|my friendly doc|friendlydoc|friendly doc|wizzard|markdown|documentation|docs|flowchart|knowledge workspace/.test(
+          lower,
+        )
+      ) {
+        focusHint =
+          "INTENT: MYFRIENDLYDOC / DOCS STARTUP. Explain the product as a live Markdown-first documentation SaaS: projects/docs, split-pane editor, global search, archiving, autosave, secure project locking, read-only sharing, visual flowcharts, and Wizzard AI assistant. Emphasize founder insight: Anuvrat built it after losing his own docs across too many tools.";
       } else if (
         /tardis|diibs|antayoga|project|built|platform|system/.test(lower)
       ) {

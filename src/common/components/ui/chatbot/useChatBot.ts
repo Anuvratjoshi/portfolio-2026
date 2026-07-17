@@ -165,14 +165,15 @@ export function useChatBot() {
 
   // ─── Bookmarking ───────────────────────────────────────────────────────────
   const handleBookmark = useCallback((id: string) => {
-    setMessages((prev) => {
-      const msg = prev.find((m) => m.id === id);
-      if (!msg) return prev;
-      const next = !msg.bookmarked;
-      toast(next ? "Message saved!" : "Bookmark removed");
-      return prev.map((m) => (m.id === id ? { ...m, bookmarked: next } : m));
-    });
-  }, []);
+    const msg = messages.find((m) => m.id === id);
+    if (!msg) return;
+
+    const next = !msg.bookmarked;
+    setMessages((prev) =>
+      prev.map((m) => (m.id === id ? { ...m, bookmarked: next } : m)),
+    );
+    toast(next ? "Message saved!" : "Bookmark removed");
+  }, [messages]);
 
   // ─── Export ────────────────────────────────────────────────────────────────
   const exportChat = useCallback(() => {

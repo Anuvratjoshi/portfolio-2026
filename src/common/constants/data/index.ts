@@ -233,6 +233,41 @@ export const PROJECTS: Project[] = [
       },
     ],
   },
+  {
+    title: "MyFriendlyDoc",
+    subtitle: "Markdown Documentation SaaS - Startup",
+    description:
+      "A Markdown-first documentation platform Anuvrat built to solve a problem he personally kept hitting: writing useful docs, spreading them across too many apps, and then failing to find them later. MyFriendlyDoc gives users a clean project/document structure, a split-pane Markdown editor with live preview, fast global search, archiving, autosave, secure read-only sharing, project locking, and an AI documentation assistant called Wizzard that helps polish raw notes into clearer docs.",
+    link: "https://my-friendly-doc.vercel.app/",
+    linkLabel: "View Live Site",
+    badge: "Startup · Live",
+    tags: [
+      "Next.js",
+      "React.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Markdown",
+      "AI Assistant",
+      "Secure Sharing",
+      "Autosave",
+      "Search",
+      "Flowcharts",
+      "SaaS",
+    ],
+    bullets: [
+      "Built a Markdown-first knowledge workspace with unlimited projects and documents, live split-pane preview, GFM support, favorites, recents, trash restore, and global command-palette search",
+      "Implemented secure documentation workflows: password-protected projects, read-only share links, viewer access verification, expiring unlock sessions, and link regeneration for revoked access",
+      "Added Wizzard, an early AI documentation assistant that asks focused context questions, understands audience/tone/goals, rewrites raw notes into polished docs, and saves the output as a real document",
+      "Built an in-editor visual flowchart builder so users can create process diagrams with shapes, connections, waypoints, and insert them directly into Markdown documents",
+      "Positioned as a simple, free-to-start documentation product for developers, writers, and teams who need searchable, organized, durable knowledge without setup overhead",
+    ],
+    sources: [
+      {
+        label: "MyFriendlyDoc live product site",
+        url: "https://my-friendly-doc.vercel.app/",
+      },
+    ],
+  },
 ];
 
 export const AI_WORKFLOW = [
