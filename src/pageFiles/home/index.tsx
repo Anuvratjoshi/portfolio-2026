@@ -1,5 +1,6 @@
 import { Hero } from "./Hero";
 import { About } from "./About";
+import { RoleFit } from "./RoleFit";
 import { Skills } from "./Skills";
 import { Experience } from "./Experience";
 import { Projects } from "./Projects";
@@ -13,6 +14,7 @@ export default function HomePage() {
     <main>
       <Hero />
       <About />
+      <RoleFit />
       <Skills />
       <Experience />
       <Projects />

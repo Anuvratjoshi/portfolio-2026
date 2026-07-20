@@ -9,6 +9,7 @@ import { PERSONAL } from "@/common/constants/data";
 
 const NAV_LINKS = [
   { label: "About", href: "#about" },
+  { label: "Fit", href: "#role-fit" },
   { label: "Skills", href: "#skills" },
   { label: "Experience", href: "#experience" },
   { label: "Projects", href: "#projects" },
@@ -79,7 +80,7 @@ export function Navbar() {
           </motion.button>
 
           {/* Desktop Nav */}
-          <ul className="hidden md:flex items-center gap-1">
+          <ul className="hidden xl:flex items-center gap-1">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
                 <button
@@ -109,7 +110,7 @@ export function Navbar() {
           </ul>
 
           {/* Hire CTA + Theme Toggle */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden xl:flex items-center gap-3">
             <ThemeToggle />
             <motion.a
               href={`mailto:${PERSONAL.email}`}
@@ -122,7 +123,7 @@ export function Navbar() {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center gap-2">
+          <div className="xl:hidden flex items-center gap-2">
             <ThemeToggle />
             <button
               className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white p-2"
@@ -143,7 +144,7 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
-            className="fixed top-16 left-0 right-0 z-40 bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl border-b border-slate-200/80 dark:border-slate-800/60 md:hidden"
+            className="fixed top-16 left-0 right-0 z-40 bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl border-b border-slate-200/80 dark:border-slate-800/60 xl:hidden"
           >
             <ul className="max-w-7xl mx-auto px-6 py-4 flex flex-col gap-1">
               {NAV_LINKS.map((link) => (

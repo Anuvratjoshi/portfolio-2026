@@ -141,7 +141,7 @@ export const PROJECTS: Project[] = [
       "SSE Streaming",
     ],
     bullets: [
-      "Operated a large-scale production system spanning 50+ MongoDB collections and millions of records, with cron-based automations, Azure Logic Apps, and Azure Event Grid integrations driving the event-driven backbone",
+      "Operated a large-scale production system spanning 110+ MongoDB collections and millions of records, with cron-based automations, Azure Logic Apps, and Azure Event Grid integrations driving the event-driven backbone",
       "Designed scalable data ingestion pipelines integrating ServiceNow, Cloud9, and Cohesity ASC for continuous real-time data flow across enterprise systems",
       "Built web scraping pipelines and cron-based automation for data normalization and cleanup, significantly reducing manual operations and improving data reliability",
       "Implemented role-based access control (RBAC) so users see context-appropriate dashboards and permissions based on their business role",
